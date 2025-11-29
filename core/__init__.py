@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from flask_session import Session
 
 from . import db
+from .auth import auth_bp
 
 load_dotenv()
 SECRET_KEY=os.getenv('SECRET_KEY')
@@ -32,6 +33,9 @@ def create_app(test_config=None):
         pass
 
     db.init_app(app)
+
+    # register blueprints
+    app.register_blueprint(auth_bp)
 
     return app
 
