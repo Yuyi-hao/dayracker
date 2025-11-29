@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS accounts;
 
 CREATE TABLE accounts(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id TEXT UNIQUE NOT NULL ,
+    -- user_id TEXT UNIQUE NOT NULL ,
     email TEXT UNIQUE NOT NULL CHECK (email LIKE '%_@__%.__%'),
     password TEXT NOT NULL,
     "username" TEXT UNIQUE NOT NULL  CHECK(typeof("username") = "text" AND length("username") <= 100),
