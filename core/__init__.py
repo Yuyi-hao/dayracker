@@ -4,6 +4,7 @@ from flask import Flask
 from dotenv import load_dotenv
 from flask_session import Session
 
+from . import db
 
 load_dotenv()
 SECRET_KEY=os.getenv('SECRET_KEY')
@@ -30,6 +31,7 @@ def create_app(test_config=None):
     except:
         pass
 
+    db.init_app(app)
 
     return app
 
