@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en"  data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>DayRacker | {% block title %}{% endblock %}</title>
+</head>
+<body>
+    <nav class="border navbar navbar-expand-md">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/"><span class="blue">Day Tracker</a>
+            <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-bs-target="#navbar" data-bs-toggle="collapse" type="button">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbar">
+                {% if session["user_id"] %}
+                    <ul class="navbar-nav me-auto mt-2">
+                        <li class="nav-item"><a class="nav-link" href="/quote">Quote</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/buy">Buy</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/sell">Sell</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/history">History</a></li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto mt-2">
+                        <li class="nav-item"><a class="nav-link" href="/auth/logout">Log Out</a></li>
+                    </ul>
+                {% else %}
+                    <ul class="navbar-nav ms-auto mt-2">
+                        <li class="nav-item"><a class="nav-link" href="/auth/register">Register</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/auth/login">Log In</a></li>
+                    </ul>
+                {% endif %}
+            </div>
+            <button id="theme-toggle" class="btn btn-outline-primary ms-3"> 🌙 Dark </button> 
+        </div>
+    </nav>
+    
+    {% if get_flashed_messages() %}
+        <header>
+            <div class="alert alert-primary mb-0 text-center" role="alert">
+                {{ get_flashed_messages() | join(" ") }}
+            </div>
+        </header>
+    {% endif %}
+
+    <main class="container py-5 text-center">
+        {% block main %}{% endblock %}
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script>
+        const root = document.documentElement;
+        const toggleBtn = document.getElementById("theme-toggle");
+
+        // Load previous theme
+        const saved = localStorage.getItem("theme") || "light";
+        root.setAttribute("data-bs-theme", saved);
+        toggleBtn.textContent = saved === "dark" ? "☀️ Light" : "🌙 Dark";
+
+        toggleBtn.addEventListener("click", () => {
+            const current = root.getAttribute("data-bs-theme");
+            const next = current === "light" ? "dark" : "light";
+
+            root.setAttribute("data-bs-theme", next);
+            localStorage.setItem("theme", next);
+            toggleBtn.textContent = next === "dark" ? "☀️ Light" : "🌙 Dark";
+        });
+    </script>
+
+
+</body>
+</html>

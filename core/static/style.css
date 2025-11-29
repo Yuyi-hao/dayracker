@@ -1,0 +1,64 @@
+/* -------- LIGHT MODE -------- */
+:root,
+html[data-bs-theme="light"] {
+  --bs-body-bg: #ffffff;
+  --bs-body-color: #000000;
+
+  --bs-primary: #190822;
+  --bs-primary-rgb: 25, 8, 34;
+
+  --bs-link-color: #190822;
+  --bs-link-hover-color: #2a0c3a;
+
+  --hero-bg: #f9f9f9;
+  --hero-text-muted: #6a6a6a;
+}
+
+/* -------- DARK MODE -------- */
+html[data-bs-theme="dark"] {
+  --bs-body-bg: #0d0d0d;
+  --bs-body-color: #f0f0f0;
+
+  --bs-primary: #a678c7;        /* lighter purple for dark mode */
+  --bs-primary-rgb: 166, 120, 199;
+
+  --bs-link-color: #a678c7;
+  --bs-link-hover-color: #cba6e3;
+
+  --hero-bg: #181818;
+  --hero-text-muted: #b3b3b3;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  transition: 0.3s ease;
+}
+
+
+.hero-section {
+  background: var(--hero-bg);
+  border-radius: 20px;
+  padding: 60px 20px;
+}
+
+.hero-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 56px;
+  font-weight: 700;
+  color: var(--bs-primary);
+}
+
+.hero-subtitle {
+  max-width: 600px;
+  margin: 0 auto;
+  color: var(--hero-text-muted);
+  font-size: 18px;
+}
+
+.btn-primary {
+  border-radius: 12px;
+  padding: 12px 32px;
+  font-weight: 600;
+}
