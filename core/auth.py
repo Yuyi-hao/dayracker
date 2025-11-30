@@ -76,7 +76,7 @@ def logout_user():
     session.clear()
     return redirect("/")
 
-@auth_bp.route("/profile", methods=["GET", "POST", "PUT"])
+@auth_bp.route("/profile", methods=["GET", "POST"])
 @login_required
 def profile_user():
     user_id = session.get("user_id")
@@ -84,7 +84,7 @@ def profile_user():
     user_profile = db.execute(
         "SELECT acc.id, acc.username, acc.email, acc.created_at AS account_created, acc.modified_at AS account_update, \
         pr.first_name, pr.last_name, pr.profile_pic, pr.date_of_birth, pr.created_at AS profile_created, pr.modified_at profile_updated, \
-        loc.city, loc.country \
+        loc.id AS location_id, loc.city, loc.country \
         FROM accounts AS acc \
         JOIN user_profiles AS pr \
         ON acc.id = pr.user_id  \

@@ -1,9 +1,216 @@
 {% extends "base.html" %}
 
 {% block title %}
-    {{ user_profile["username"] }}
+{{ user_profile["username"] }}
 {% endblock %}
 
 {% block main %}
+    <form action="#" method="POST">
+        <div class="card card-default">
+            <div class="card-header">
+                <h3 class="card-title">{{ user_profile["username"] }}</h3>
+            </div>
 
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            {% if user_profile['profile_pic'] %}
+                                <img src="{{ user_profile['profile_pic'] }}"
+                                    id="profile-img" class="img-fluid rounded mb-2">
+                            {% else %}
+                                <img src="https://pusheen.com/wp-content/uploads/2020/09/Preview-Image.jpg"
+                                    id="profile-img" class="img-fluid rounded mb-2">
+                            {% endif %}
+                            <input type="hidden" name="profile-image-url" id="profile-image-url" value="">
+
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-primary"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#changeProfileImageModal">
+                                Change Profile Picture
+                            </button>
+                            <div class="modal fade" id="changeProfileImageModal" tabindex="-1" role="dialog"
+                                aria-labelledby="changeProfileImageModalTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="changeProfileImageModalLongTitle">Profile Picture</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <img src="" alt="Profile Picture" width="450px" id="preview-profile-image">
+                                            <input type="file" name="profile-image-input" id="profile-image-input"
+                                                accept="image/png, image/jpeg" style="margin-top: 20px;"
+                                                onchange="updateProfileImage()">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button type="button" onclick="changeProfileImage()" class="btn btn-primary">Upload Profile Picture</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                                
+
+                    <!-- Account Info  -->
+                    <div class="col-md-8">
+                        <h3 class="h3 text-start">Account</h3>
+                        <div class="col-md-8">
+                            <div class="form-group text-start">
+                                <label for="username" class="px-1 mb-2">Username</label>
+                                <input type="text" id="username" name="username" class="form-control" value="{{ user_profile['username'] }}" disabled>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-8">
+                            <div class="form-group text-start">
+                                <label for="email" class="px-1 mb-2">Email</label>
+                                <input type="text" id="email" name="email" class="form-control" value="{{ user_profile['email'] }}" disabled>
+                            </div>
+                        </div>
+                        
+                        <!-- Profile Info  -->
+                        <h3 class="h3 text-start mt-3">Profile</h3>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group text-start">
+                                    <label for="first-name" class="px-1 mb-2">First Name</label>
+                                    <div style="display:inline-block; position:relative;"> <!-- for enabling input clicking as disabled doesn't response to mouse events -->
+                                        <input type="text" id="first-name" name="first-name" class="form-control" value="{{ user_profile['first_name'] }}" disabled>
+                                        <div style="position:absolute; left:0; right:0; top:0; bottom:0;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <div class="form-group text-start">
+                                    <label for="last-name" class="px-1 mb-2">Last Name</label>
+                                    <div style="display:inline-block; position:relative;"> <!-- for enabling input clicking as disabled doesn't response to mouse events -->
+                                        <input type="text" id="last-name" name="last-name" class="form-control" value="{{ user_profile['last_name'] }}" disabled>
+                                        <div style="position:absolute; left:0; right:0; top:0; bottom:0;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-8">
+                            <div class="form-group text-start">
+                                <label for="date-of-birth" class="px-1 mb-2">Date of Birth</label>
+                                <div style="position:relative; width:100%"> <!-- for enabling input clicking as disabled doesn't response to mouse events -->
+                                    <input type="date" id="date-of-birth" name="date-of-birth" class="form-control" value="{{ user_profile['date_of_birth'] }}" disabled>
+                                    <div style="position:absolute; left:0; right:0; top:0; bottom:0;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h4 class="h4 text-start mt-2">Location</h4>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group text-start">
+                                    <label for="city" class="px-1 mb-2">City</label>
+                                    <div style="display:inline-block; position:relative;"> <!-- for enabling input clicking as disabled doesn't response to mouse events -->
+                                        <input type="text" id="city" name="city" class="form-control" value="{{ user_profile['city'] }}" disabled>
+                                        <div style="position:absolute; left:0; right:0; top:0; bottom:0;"></div>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div class="col-md-4">
+                                <div class="form-group text-start">
+                                    <label for="country" class="px-1 mb-2">Country</label>
+                                    <div style="display:inline-block; position:relative;"> <!-- for enabling input clicking as disabled doesn't response to mouse events -->
+                                        <input type="text" id="country" name="country" class="form-control" value="{{ user_profile['country'] }}" disabled>
+                                        <div style="position:absolute; left:0; right:0; top:0; bottom:0;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer text-right">
+                <button type="submit" class="btn btn-success btn-sm">Update profile</button>
+            </div>
+
+        </div>
+    </form>
+
+    <script>
+        document.querySelectorAll('.form-group').forEach((group) => {
+            const overlay = group.querySelector('div[style*="position:absolute"]');
+            if (!overlay) return;
+            overlay.addEventListener('click', (e) => {
+                const input = overlay.previousElementSibling;
+                overlay.style.display = "none";
+                input.disabled = false;
+                input.focus();
+            })
+        })
+    </script>
+
+    <script>
+    function getCookie(name) {
+      var cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+          var cookies = document.cookie.split(';');
+          for (var i = 0; i < cookies.length; i++) {
+              var cookie = cookies[i].trim();
+              // Check if this cookie string begins with the name we want
+              if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+              }
+          }
+      }
+      return cookieValue;
+  }
+
+    // Updating cover image
+    function updateProfileImage(){
+        const img_preview = document.getElementById('preview-profile-image');
+        img_preview.src = URL.createObjectURL(event.target.files[0]);
+        return 0;
+    }
+    
+    function changeProfileImage(){
+        const cover_img = document.getElementById('profile-img');
+        const change_img_url = `/auth/upload-profile-image`;
+        const img_file  = document.getElementById('profile-image-input').files[0];
+        if(img_file.size > 5000000){
+        alert('File is too big');
+        return 0;
+        }
+        let xhr = new XMLHttpRequest();
+        let form_data = new FormData();
+        form_data.append('cover_image', img_file);
+        xhr.open('POST', change_img_url, true);
+        xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+        
+        xhr.onload = () => {
+        if (xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            const imageUrl = response.image_url;
+            if(imageUrl){
+            cover_img.src = imageUrl;
+            document.getElementById('profile-image-url').value = imageUrl;
+            }
+            alert('Image uploaded successfully!');
+            return 1;
+        }
+        else {
+            alert('Upload failed.', );
+            return 0;
+        }
+        };
+        xhr.send(form_data);
+        return 1;
+    }
+
+    </script>
 {% endblock %}
