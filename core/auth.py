@@ -1,4 +1,3 @@
-import functools
 from flask import (
     Blueprint, redirect, render_template, request, session, flash, url_for, jsonify
 )
@@ -39,7 +38,7 @@ def register_user():
             except:
                 raise Exception("Invalid data.")
             flash("Signed Up successfully", "info")
-            return redirect("/auth/profile")
+            return redirect(url_for('auth.profile_user'))
         except Exception as err:
             error = err
             flash(error, "error")
@@ -65,6 +64,7 @@ def login_user():
              # Remember which user has logged in
             session["user_id"] = user["id"]
             flash("Logged In", "info")
+            return redirect(url_for('auth.profile_user'))
         except Exception as error:
             flash(error, "error")
     return render_template("auth/login_user.html")
