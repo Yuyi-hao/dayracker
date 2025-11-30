@@ -1,6 +1,6 @@
 import functools
 from flask import (
-    Blueprint, redirect, render_template, request, session, flash, url_for
+    Blueprint, redirect, render_template, request, session, flash, url_for, jsonify
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -92,4 +92,50 @@ def profile_user():
         ON loc.id = pr.location_id \
         WHERE acc.id = ?", (user_id, )).fetchone()
     
+    if request.method == "POST":
+        try:
+            import pdb; pdb.set_trace()
+            firstName = request.form.get('first-name', user_profile['first_name'])
+            lastName = request.form.get('last-name', user_profile['last_name'])
+            profile_img = request.form.get('profile-image-url', user_profile['profile_pic'])
+            date_of_birth = request.form.get('date-of-birth', user_profile['date_of_birth'])
+            location_id = user_profile['location_id']
+            city = request.form.get('city', user_profile['city'])
+            country = request.form.get('country', user_profile['country'])
+
+            if city != user_profile['city'] or country != user_profile['country']:
+                db.execute(
+                    "UPDATE user_profiles \
+                    SET first_name=?, last_name=?, profile_pic=?, date_of_birth=?, location_id=? \
+                    WHERE user_id=?", (firstName, lastName, profile_img, date_of_birth, location_id, user_id))
+
+
+            db.execute(
+                "UPDATE user_profiles \
+                SET first_name=?, last_name=?, profile_pic=?, date_of_birth=?, location_id=? \
+                WHERE user_id=?", (firstName, lastName, profile_img, date_of_birth, location_id, user_id))
+            db.commit()
+
+            flash("Updated successfully", "success")
+        except Exception as err:
+            flash(err, "error")
+    user_profile = db.execute(
+        "SELECT acc.id, acc.username, acc.email, acc.created_at AS account_created, acc.modified_at AS account_update, \
+        pr.first_name, pr.last_name, pr.profile_pic, pr.date_of_birth, pr.created_at AS profile_created, pr.modified_at profile_updated, \
+        loc.id AS location_id, loc.city, loc.country \
+        FROM accounts AS acc \
+        JOIN user_profiles AS pr \
+        ON acc.id = pr.user_id  \
+        LEFT JOIN locations as loc \
+        ON loc.id = pr.location_id \
+        WHERE acc.id = ?", (user_id, )).fetchone()
     return render_template("auth/profile_user.html", user_profile=user_profile)
+
+
+@auth_bp.route("/upload-profile-image", methods=["POST"])
+@login_required
+def upload_profile_picture():
+    image_url = "https://cdn.wallpapersafari.com/61/84/zkmOeC.jpg"
+    response = {"image_url": image_url, "success": True, "status_code":204}
+    return jsonify(response)
+
