@@ -94,7 +94,6 @@ def profile_user():
     
     if request.method == "POST":
         try:
-            import pdb; pdb.set_trace()
             firstName = request.form.get('first-name', user_profile['first_name'])
             lastName = request.form.get('last-name', user_profile['last_name'])
             profile_img = request.form.get('profile-image-url', user_profile['profile_pic'])
