@@ -99,15 +99,17 @@ def profile_user():
             profile_img = request.form.get('profile-image-url', user_profile['profile_pic'])
             date_of_birth = request.form.get('date-of-birth', user_profile['date_of_birth'])
             location_id = user_profile['location_id']
-            city = request.form.get('city', user_profile['city'])
-            country = request.form.get('country', user_profile['country'])
+            city = request.form.get('city', user_profile['city']).lower()
+            country = request.form.get('country', user_profile['country']).lower()
 
             if city != user_profile['city'] or country != user_profile['country']:
-                db.execute(
-                    "UPDATE user_profiles \
-                    SET first_name=?, last_name=?, profile_pic=?, date_of_birth=?, location_id=? \
-                    WHERE user_id=?", (firstName, lastName, profile_img, date_of_birth, location_id, user_id))
-
+                location = db.execute("SELECT id FROM locations WHERE city=? AND country=?", (city, country)).fetchone()
+                if not location:
+                    location = db.execute("INSERT INTO locations (city, country) VALUES(?, ?)", (city, country))
+                    location_id = location.lastrowid
+                    db.commit()
+                else:
+                    location_id = location['id']
 
             db.execute(
                 "UPDATE user_profiles \
