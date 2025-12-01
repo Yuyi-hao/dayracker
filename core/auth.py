@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, redirect, render_template, request, session, flash, url_for, jsonify
+    Blueprint, redirect, render_template, request, session, flash, url_for, jsonify, current_app
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -136,7 +136,12 @@ def profile_user():
 @auth_bp.route("/upload-profile-image", methods=["POST"])
 @login_required
 def upload_profile_picture():
-    image_url = "https://cdn.wallpapersafari.com/61/84/zkmOeC.jpg"
+    user_id = session['user_id']
+    file = request.files['cover_image']
+    if 'image' not in file.content_type:
+        response = {"image_url": None, "success": False, "status_code":400, "message": "File is not an image"}
+        return jsonify(response)
+    image_url = current_app.storage.save(file, f"{user_id}-profile-pic.{file.content_type.split('/')[-1]}")
     response = {"image_url": image_url, "success": True, "status_code":204}
     return jsonify(response)
 

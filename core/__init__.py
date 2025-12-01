@@ -6,10 +6,11 @@ from flask_session import Session
 
 from . import db
 from .auth import auth_bp
+from .storage import LocalStorage
 
 load_dotenv()
 SECRET_KEY=os.getenv('SECRET_KEY')
-
+ENVIRONMENT=os.getenv('ENVIRONMENT')
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -21,6 +22,12 @@ def create_app(test_config=None):
     app.config["SESSION_PERMANENT"] = False
     app.config["SESSION_TYPE"] = "filesystem"
     Session(app)
+    
+    if ENVIRONMENT=="local":
+        app.storage = LocalStorage()
+    else:
+        print("ERROR: Storage is not initialized")
+        pass
 
     if test_config is None:
         app.config.from_pyfile('config.py', silent=True)
