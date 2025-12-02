@@ -1,3 +1,5 @@
+import uuid
+
 from flask import (
     Blueprint, redirect, render_template, request, session, flash, url_for, jsonify, current_app
 )
@@ -16,6 +18,7 @@ def register_user():
         try:
             if request.form.get('password') != request.form.get('confirmation'):
                 raise ValueError("Password doesn't match")
+            user_id = uuid.uuid4().hex
             email = request.form.get('email')
             username = request.form.get('username')
             password = request.form.get('password')
@@ -29,7 +32,7 @@ def register_user():
             
             db = get_db()
             try:
-                user_id = db.execute("INSERT INTO accounts (username, email, password) VALUES(?, ?, ?)", (username, email, generate_password_hash(password))).lastrowid
+                db.execute("INSERT INTO accounts (user_id, username, email, password) VALUES(?, ?, ?, ?)", (user_id, username, email, generate_password_hash(password))).lastrowid
                 db.execute("INSERT INTO user_profiles (user_id, first_name, last_name) VALUES(?, ?, ?)", (user_id, firstname, lastname))
                 db.commit()
                 session["user_id"] = user_id
@@ -62,7 +65,7 @@ def login_user():
             if not check_password_hash(user["password"], password):
                 raise ValueError("Incorrect password")
              # Remember which user has logged in
-            session["user_id"] = user["id"]
+            session["user_id"] = user["user_id"]
             flash("Logged In", "info")
             return redirect(url_for('auth.profile_user'))
         except Exception as error:
@@ -82,15 +85,15 @@ def profile_user():
     user_id = session.get("user_id")
     db = get_db()
     user_profile = db.execute(
-        "SELECT acc.id, acc.username, acc.email, acc.created_at AS account_created, acc.modified_at AS account_update, \
+        "SELECT acc.user_id, acc.id, acc.username, acc.email, acc.created_at AS account_created, acc.modified_at AS account_update, \
         pr.first_name, pr.last_name, pr.profile_pic, pr.date_of_birth, pr.created_at AS profile_created, pr.modified_at profile_updated, \
         loc.id AS location_id, loc.city, loc.country \
         FROM accounts AS acc \
         JOIN user_profiles AS pr \
-        ON acc.id = pr.user_id  \
+        ON acc.user_id = pr.user_id  \
         LEFT JOIN locations as loc \
         ON loc.id = pr.location_id \
-        WHERE acc.id = ?", (user_id, )).fetchone()
+        WHERE acc.user_id = ?", (user_id, )).fetchone()
     
     if request.method == "POST":
         try:
@@ -121,15 +124,15 @@ def profile_user():
         except Exception as err:
             flash(err, "error")
     user_profile = db.execute(
-        "SELECT acc.id, acc.username, acc.email, acc.created_at AS account_created, acc.modified_at AS account_update, \
+        "SELECT acc.user_id, acc.id, acc.username, acc.email, acc.created_at AS account_created, acc.modified_at AS account_update, \
         pr.first_name, pr.last_name, pr.profile_pic, pr.date_of_birth, pr.created_at AS profile_created, pr.modified_at profile_updated, \
         loc.id AS location_id, loc.city, loc.country \
         FROM accounts AS acc \
         JOIN user_profiles AS pr \
-        ON acc.id = pr.user_id  \
+        ON acc.user_id = pr.user_id  \
         LEFT JOIN locations as loc \
         ON loc.id = pr.location_id \
-        WHERE acc.id = ?", (user_id, )).fetchone()
+        WHERE acc.user_id = ?", (user_id, )).fetchone()
     return render_template("auth/profile_user.html", user_profile=user_profile)
 
 
