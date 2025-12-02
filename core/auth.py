@@ -102,13 +102,13 @@ def profile_user():
             profile_img = request.form.get('profile-image-url', user_profile['profile_pic'])
             date_of_birth = request.form.get('date-of-birth', user_profile['date_of_birth'])
             location_id = user_profile['location_id']
-            city = request.form.get('city', user_profile['city']).lower()
-            country = request.form.get('country', user_profile['country']).lower()
+            city = request.form.get('city', user_profile['city'])
+            country = request.form.get('country', user_profile['country'])
 
-            if city != user_profile['city'] or country != user_profile['country']:
-                location = db.execute("SELECT id FROM locations WHERE city=? AND country=?", (city, country)).fetchone()
+            if city and country and (city.lower() != user_profile['city'] or country.lower() != user_profile['country']):
+                location = db.execute("SELECT id FROM locations WHERE city=? AND country=?", (city.lower(), country.lower())).fetchone()
                 if not location:
-                    location = db.execute("INSERT INTO locations (city, country) VALUES(?, ?)", (city, country))
+                    location = db.execute("INSERT INTO locations (city, country) VALUES(?, ?)", (city.lower(), country.lower()))
                     location_id = location.lastrowid
                     db.commit()
                 else:
