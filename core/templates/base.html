@@ -41,19 +41,27 @@
     </nav>
     
 
-    {% for category, message in get_flashed_messages(with_categories=True) %}
-        <header>
-            {% if category == 'info' %}
-                <div class="alert alert-primary mb-0 text-start" role="alert">
-                    {{ message }}
-                </div>
-            {% elif category == 'error' %}
-                <div class="alert alert-error mb-0 text-start" role="alert">
-                    {{ message }}
-                </div>
-            {% endif %}
-        </header>
-    {% endfor %}
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            <div class="space-y-2">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 
+                            'primary' if category=='info' else
+                            'warning' if category=='warning' else
+                            'danger' if category=='error' else
+                            'success'
+                        }} alert-dismissible"
+                        role="alert">
+
+                        <span>{{ message }}</span>
+
+                        <!-- Close button -->
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
 
     <main class="container py-5 text-center">
         {% block main %}{% endblock %}
