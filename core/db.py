@@ -24,9 +24,11 @@ def close_db(e=None):
 def init_db():
     db = get_db()
     model_schema_folder = os.path.join(current_app.root_path, "..", "database_models")
-    for filename in os.listdir(model_schema_folder):
+    files = sorted(os.listdir(model_schema_folder))
+    for filename in files:
         current_schema_path = os.path.join(model_schema_folder, filename) 
         with current_app.open_resource(current_schema_path) as f:
+            print("Executing:", filename)
             db.executescript(f.read().decode('utf-8'))
 
 @click.command('init-db')
