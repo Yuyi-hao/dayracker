@@ -218,3 +218,5 @@ __marimo__/
 flask_session/*
 
 *.db
+
+core/static/upload/
