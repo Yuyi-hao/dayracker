@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Day Entry
+{% endblock %}
+
+{% block main %}
+    {% set mood_options = {
+        0: "Not entered",
+        1: "Bad",
+        2: "Not good",
+        3: "As usual",
+        4: "Good",
+        5: "Amazing"
+    } %}
+    {% set workload_options = {
+        0: "Ehh",
+        1: "Very Hectic",
+        2: "Tiring",
+        3: "Workable",
+        4: "Light Day",
+        5: "Good Work"
+    } %}
+    
+    {% set outgoing_options = {
+        0: "No Outgoing",
+        1: "Essentials",
+        2: "Walk",
+        3: "Enjoy"
+    } %}
+    
+    {% set exercise_options = {
+        0: "No Exercise",
+        1: "Light",
+        2: "Medium",
+        3: "Heavy"
+    } %}
+
+    <div class="container-fluid">
+        <h3 class="h3">How was your day?</h3>
+        <form action="#" method="POST" class="content-details-form">
+            <div class="card card-default">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="card-title mb-0">
+                            <input type="date" id="entry-date" name="entry-date"
+                                class="form-control form-control-sm"
+                                style="width: 160px;"
+                                value="{{ context.day_entry_for_user.date }}"
+                                onchange="window.location = '?date=' + this.value;">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success">
+                        Save
+                    </button>
+                </div>
+
+                <div class="card-body">
+                    <!-- SHORT + LONG NOTE -->
+                    <div class="mb-4 text-start">
+                        <h4 class="mb-2">A short note of the day</h4>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="short-note" name="short-note" placeholder="Describe your day in one sentence" value="{{ context.diary.short_note|default('') }}">
+                            <button class="btn btn-outline-primary" id="full-entry-toggle" type="button">+</button>
+                        </div>
+                        <div class="" id="full-entry-container">
+                            <label for="long-entry" class="form-label">Full Entry</label>
+                            <textarea name="long-entry" id="long-entry" value="" class="form-control" rows="8">{{ context.diary.long_entry|default('') }}</textarea>
+                        </div>
+                    </div>
+    
+                    <!-- PERSONAL   -->
+                    <div class="mb-4 text-start">
+                        <h4 class="mb-3">Personal</h4>
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <div class="form-group text-start">
+                                    <label for="wake-up-time" class="form-label">Wake Up Time</label>
+                                    <input type="time" name="wake-up-time" id="wake-up-time" placeholder="Wake Up" class="form-control" value="{{ context.personal_tracker.wakeup_time }}">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group text-start">
+                                    <label for="sleep-time" class="form-label">sleep Time</label>
+                                    <input type="time" name="sleep-time" id="sleep-time" placeholder="sleep-time" class="form-control" value="{{ context.personal_tracker.sleep_time }}">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group text-start">
+                                    <label for="screen-time" class="form-label">Screen Time</label>
+                                    <input type="time" name="screen-time" id="screen-time" placeholder="screen-time" class="form-control" value="{{ context.personal_tracker.screen_time }}">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group text-start">
+                                    <label for="water-intake" class="form-label">Water Intake</label>
+                                    <div class="input-group">
+                                        <input type="number" name="water-intake" id="water-intake" placeholder="water-intake" class="form-control" value="{{ context.personal_tracker.water_intake }}">
+                                        <span class="input-group-text">liter</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label" for="exercise">Exercise</label>
+                                <select class="form-select" id="exercise" name="exercise">
+                                    {% for value, text in exercise_options.items() %}
+                                        <option value="{{ value }}" {% if context.personal_tracker.exercise == value %}selected{% endif %}>
+                                            {{ text }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group text-start">
+                                    <label class="form-label" for="outgoing">Outgoing</label>
+                                    <select class="form-select" id="outgoing" name="outgoing">
+                                        {% for value, text in outgoing_options.items() %}
+                                            <option value="{{ value }}" {% if context.personal_tracker.outgoing == value %}selected{% endif %}>
+                                                {{ text }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group text-start">
+                                    <label class="form-label" for="mood">Mood</label>
+                                    <select class="form-select" id="mood" name="mood">
+                                        {% for value, text in mood_options.items() %}
+                                            <option value="{{ value }}" {% if context.personal_tracker.mood == value %}selected{% endif %}>
+                                                {{ text }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center gap-2">
+                                <h4 class="h4 text-start">work</h4>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="off-day" {% if context.work_tracker.is_off %} checked {% endif %}>
+                                <label class="form-check-label" for="off-day">Off Day</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group text-start">
+                                <label for="commute-time" class="form-label">Commute Time</label>
+                                <input type="time" name="commute-time" id="commute-time" placeholder="Commute Time" class="form-control" value="{{ context.work_tracker.commute_time }}">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group text-start">
+                                <label for="return-time" class="form-label">Return Time</label>
+                                <input type="time" name="return-time" id="return-time" placeholder="Return Time" class="form-control" value="{{ context.work_tracker.return_time }}">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group text-start">
+                                <label for="break-time" class="form-label">Break Time</label>
+                                <input type="time" name="break-time" id="break-time" placeholder="Break Time" class="form-control" value="{{ context.work_tracker.break_time }}">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group text-start">
+                                <label for="given-work" class="form-label">Total Classes/meetings</label>
+                                <div class="input-group">
+                                    <input type="number" name="given-work" id="given-work" placeholder="given-work" class="form-control" value="{{ context.work_tracker.given_work }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group text-start">
+                                <label for="completed-work" class="form-label">Attended Classes/meetings</label>
+                                <div class="input-group">
+                                    <input type="number" name="completed-work" id="completed-work" placeholder="completed-work" class="form-control" value="{{ context.work_tracker.completed_work }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group text-start">
+                                <label class="form-label" for="workload">WorkLoad</label>
+                                <select class="form-select" id="workload" name="workload">
+                                    {% for value, text in workload_options.items() %}
+                                        <option value="{{ value }}" {% if context.work_tracker.workload == value %}selected{% endif %}>
+                                            {{ text }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+<script>
+    document.getElementById('full-entry-toggle').addEventListener('click', () =>{
+        document.getElementById('full-entry-container').style.display = 'block';
+    })
+</script>
+{% endblock %}
