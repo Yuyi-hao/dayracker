@@ -6,6 +6,7 @@ from flask_session import Session
 
 from . import db
 from .auth import auth_bp
+from .day_entry import day_entry_bp
 from .storage import LocalStorage
 
 load_dotenv()
@@ -43,6 +44,7 @@ def create_app(test_config=None):
 
     # register blueprints
     app.register_blueprint(auth_bp)
+    app.register_blueprint(day_entry_bp)
 
     return app
 
