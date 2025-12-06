@@ -81,6 +81,7 @@ CREATE TABLE work_trackers_data(
     -- numeric fields
     given_work INTEGER,
     completed_work INTEGER,
+    is_off BOOLEAN,
 
     -- enums
     workload INTEGER CHECK (workload BETWEEN 0 AND 5),   -- 0=none, 1=Ehh, 2=ok, 3=usual, 4=tiring, 5=hectic
