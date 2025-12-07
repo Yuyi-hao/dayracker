@@ -42,7 +42,7 @@ def update_habit(tracker_id: int):
         tracker_name = request.form.get('tracker-name')
         data_type = request.form.get('data-type')
         unit = request.form.get('unit')
-        enum_options = request.form.get('enum-options')
+        enum_options = request.form.get('enum-options', ''.split(','))
         is_active = request.form.get('is-active') == 'on'
         db.execute("UPDATE custom_trackers SET name=?, data_type=?, unit=?, enum_options=?, is_active=? WHERE user_id=? AND id=?", (tracker_name, data_type, unit, enum_options, is_active, user_id, tracker_id))
         db.commit()

@@ -195,6 +195,64 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="row mt-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center gap-2">
+                                <h4 class="h4 text-start">Custom</h4>
+                            </div>
+                        </div>
+                        {% for custom_tracker in context.custom_trackers %}
+                            {% if custom_tracker.data_type == 'time' %}
+                                <div class="col-md-2">
+                                    <div class="form-group text-start">
+                                        <label for="custom-tracker-{{ custom_tracker.name }}-{{ custom_tracker.tracker_id }}" class="form-label">{{ custom_tracker.name }}</label>
+                                        <input type="time" name="custom-tracker-{{ custom_tracker.name }}-{{ custom_tracker.tracker_id }}" id="custom-tracker-{{ custom_tracker.name }}-{{ custom_tracker.tracker_id }}" placeholder="Commute Time" class="form-control" value="{{ custom_tracker.value }}">
+                                    </div>
+                                </div>
+                            {% elif custom_tracker.data_type == 'number' %}
+                                <div class="col-md-2">
+                                    <div class="form-group text-start">
+                                        <label for="custom-tracker-{{ custom_tracker.name }}-{{ custom_tracker.tracker_id }}" class="form-label">{{ custom_tracker.name }}</label>
+                                        <div class="input-group">
+                                            <input type="number" name="custom-tracker-{{ custom_tracker.name }}-{{ custom_tracker.tracker_id }}" id="custom-tracker-{{ custom_tracker.name }}-{{ custom_tracker.tracker_id }}" placeholder="custom-tracker-{{ custom_tracker.name }}-{{ custom_tracker.tracker_id }}" class="form-control" value="{{ custom_tracker.value }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            {% elif custom_tracker.data_type == 'text' %}
+                                <div class="col-md-2">
+                                    <div class="form-group text-start">
+                                        <label for="custom-tracker-{{ custom_tracker.name }}-{{ custom_tracker.tracker_id }}" class="form-label">{{ custom_tracker.name }}</label>
+                                        <div class="input-group">
+                                            <input type="text" name="custom-tracker-{{ custom_tracker.name }}-{{ custom_tracker.tracker_id }}" id="custom-tracker-{{ custom_tracker.name }}-{{ custom_tracker.tracker_id }}" placeholder="custom-tracker-{{ custom_tracker.name }}-{{ custom_tracker.tracker_id }}" class="form-control" value="{{ custom_tracker.value }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            {% elif custom_tracker.data_type == 'enum' %}
+                                <div class="col-md-2">
+                                    <div class="form-group text-start">
+                                        <label class="form-label" for="custom-tracker-{{ custom_tracker.name }}-{{ custom_tracker.tracker_id }}">{{ custom_tracker.name }}</label>
+                                        <select class="form-select" id="custom-tracker-{{ custom_tracker.name }}-{{ custom_tracker.tracker_id }}" name="custom-tracker-{{ custom_tracker.name }}-{{ custom_tracker.tracker_id }}">
+                                            {% for val in custom_tracker.enum_options.split(",") %}
+                                                <option value="{{ val.strip() }}" {% if custom_tracker.value == val.strip() %}selected{% endif %}>
+                                                    {{ val.strip() }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            {% elif custom_tracker.data_type == 'boolean' %}
+                                <div class="col-md-2">
+                                    <div class="form-group text-start">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="custom-tracker-{{ custom_tracker.name }}-{{ custom_tracker.tracker_id }}" name="custom-tracker-{{ custom_tracker.name }}-{{ custom_tracker.tracker_id }}" {% if custom_tracker.value=='1' %} checked {% endif %}>
+                                            <label class="form-check-label" for="custom-tracker-{{ custom_tracker.name }}-{{ custom_tracker.tracker_id }}">{{ custom_tracker.name }}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </form>

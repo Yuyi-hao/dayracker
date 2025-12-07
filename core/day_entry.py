@@ -27,27 +27,36 @@ def user_day_entry():
     personal_tracker = db.execute("SELECT * FROM personal_trackers_data WHERE id=?", (day_entry_for_user["personal_trackers_id"],)).fetchone()
     work_tracker = db.execute("SELECT * FROM work_trackers_data WHERE id=?", (day_entry_for_user["work_trackers_id"],)).fetchone()
     
-    raw_ids = day_entry_for_user["custom_tracker_data_list_ids"]
-    ids = ast.literal_eval(raw_ids) if raw_ids else []
-    if ids:
-        placeholders = ",".join("?" * len(ids))
-        sql = f"""
-            SELECT *
-            FROM custom_trackers_data AS ctd
-            LEFT JOIN custom_trackers AS ct
-            ON ctd.tracker_id = ct.id
-            WHERE ct.id IN ({placeholders})
-        """
-        custom_tracker = db.execute(sql, ids).fetchall()
-    else:
-        custom_tracker = []
+    # custom trackers
+    custom_tracker_raw_ids = day_entry_for_user["custom_tracker_data_list_ids"]
+    ids = ast.literal_eval(custom_tracker_raw_ids) if custom_tracker_raw_ids else []
+    sql = """
+        SELECT 
+            ct.id                AS tracker_id,
+            ct.name              AS name,
+            ct.data_type         AS data_type,
+            ct.enum_options      AS enum_options,
+            ctd.value            AS value,
+            ctd.date             AS date
+        FROM custom_trackers ct
+        LEFT JOIN custom_trackers_data ctd
+            ON ct.id = ctd.tracker_id
+            AND ctd.user_id = ?
+            AND ctd.date = ?
+        WHERE ct.user_id = ?
+        AND ct.is_active = 1
+        ORDER BY ct.id ASC
+    """
+    custom_trackers = db.execute(sql, (user_id, date, user_id)).fetchall()
+    
     context = {
         "day_entry_for_user": day_entry_for_user,
         "diary": diary,
         "personal_tracker": personal_tracker,
         "work_tracker": work_tracker,
-        "custom_tracker": custom_tracker
+        "custom_trackers": custom_trackers
     }
+
     if request.method == "POST":
         data = request.form
         try:
@@ -71,6 +80,38 @@ def user_day_entry():
             completed_work = data.get('completed-work')
             workload = data.get('workload')
             is_off  = data.get('is-off') == "on"
+
+            for tracker in custom_trackers:
+                field_name = f"custom-tracker-{tracker['name']}-{tracker['tracker_id']}"
+                value = request.form.get(field_name)
+                if tracker['data_type'] == "boolean":
+                    value = (value=='on')
+
+                if value is not None:
+                    existing = db.execute("""
+                        SELECT id FROM custom_trackers_data
+                        WHERE user_id = ? AND tracker_id = ? AND date = ?
+                    """, (user_id, tracker["tracker_id"], date)).fetchone()
+
+                    if existing:
+                        db.execute("""
+                            UPDATE custom_trackers_data
+                            SET value = ?
+                            WHERE id = ?
+                        """, (value, existing["id"]))
+                    else:
+                        db.execute("""
+                            INSERT INTO custom_trackers_data (user_id, tracker_id, date, value)
+                            VALUES (?, ?, ?, ?)
+                        """, (user_id, tracker["tracker_id"], date, value))
+                
+                # NOTE: Need to try this query 
+                # db.execute("""
+                #     INSERT INTO custom_trackers_data (user_id, tracker_id, date, value)
+                #     VALUES (?, ?, ?, ?)
+                #     ON CONFLICT(user_id, tracker_id, date)
+                #     DO UPDATE SET value = excluded.value
+                # """, (user_id, tracker["id"], date, value))
 
 
             db.execute("UPDATE diary_entry \
