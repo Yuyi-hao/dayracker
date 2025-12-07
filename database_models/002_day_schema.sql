@@ -71,7 +71,7 @@ DROP TABLE IF EXISTS work_trackers_data;
 CREATE TABLE work_trackers_data(
     id INTEGER  PRIMARY KEY AUTOINCREMENT,
     "user_id"      TEXT    NOT NULL CHECK(typeof("user_id") = "text"),
-    date  DATE NOT NULL UNIQUE,
+    date  DATE NOT NULL,
     
     -- time fields in 24 hrs clock
     commute_time TIME,
@@ -111,7 +111,7 @@ DROP TABLE IF EXISTS personal_trackers_data;
 CREATE TABLE personal_trackers_data(
     id INTEGER  PRIMARY KEY AUTOINCREMENT,
     "user_id"      TEXT    NOT NULL CHECK(typeof("user_id") = "text"),
-    date  DATE NOT NULL UNIQUE,
+    date  DATE NOT NULL,
     
     -- time fields in 24 hrs clock
     wakeup_time TIME,
@@ -151,7 +151,7 @@ DROP TABLE IF EXISTS diary_entry;
 CREATE TABLE diary_entry(
     id INTEGER  PRIMARY KEY AUTOINCREMENT,
     "user_id"      TEXT    NOT NULL CHECK(typeof("user_id") = "text"),
-    date  DATE NOT NULL UNIQUE,
+    date  DATE NOT NULL,
     short_note TEXT,
     long_entry TEXT,
     attachments TEXT NOT NULL DEFAULT '()',
