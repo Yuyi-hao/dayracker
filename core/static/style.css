@@ -56,9 +56,3 @@ body {
   color: var(--hero-text-muted);
   font-size: 18px;
 }
-
-.btn-primary {
-  border-radius: 12px;
-  padding: 12px 32px;
-  font-weight: 600;
-}
