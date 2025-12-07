@@ -36,19 +36,18 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="changeProfileImageModalLongTitle">Profile Picture</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
                                             <img src="" alt="Profile Picture" width="450px" id="preview-profile-image">
                                             <input type="file" name="profile-image-input" id="profile-image-input"
-                                                accept="image/png, image/jpeg" style="margin-top: 20px;"
+                                                accept="image/png, image/jpeg"
+                                                class="form-control form-control-sm"
                                                 onchange="updateProfileImage()">
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <button type="button" onclick="changeProfileImage()" class="btn btn-primary">Upload Profile Picture</button>
+                                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" onclick="changeProfileImage()" class="btn btn-primary btn-sm">Upload Profile Picture</button>
                                         </div>
                                     </div>
                                 </div>
