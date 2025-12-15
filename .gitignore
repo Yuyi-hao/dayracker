@@ -220,3 +220,6 @@ flask_session/*
 *.db
 
 core/static/upload/
+
+dummy_data/*.json
+!dummy_data/custom_trackers.json
