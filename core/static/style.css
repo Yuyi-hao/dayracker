@@ -56,3 +56,39 @@ body {
   color: var(--hero-text-muted);
   font-size: 18px;
 }
+
+.chart-card {
+  height: auto;
+}
+
+.chart-card .card-body {
+  position: relative;
+  height: calc(100%-48px);
+}
+
+.chart-card canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.mood-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.mood-cell {
+  height: 36px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: #1e1e1e;
+}
+
+.mood-1 { background: #4b1d1d; }
+.mood-2 { background: #6b3e2e; }
+.mood-3 { background: #6c6c3c; }
+.mood-4 { background: #2f6b4f; }
+.mood-5 { background: #1f7a5c; }

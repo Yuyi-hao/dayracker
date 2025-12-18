@@ -1,0 +1,467 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block main %}
+<input type="text" class="form-control" name="datepicker" id="datepicker" value="{{ context.month }}-{{ context.year }}" onchange="window.location = '?date=' + this.value;"/>
+<div class="py-6 px-3 mt-2">
+  <div class="row">
+    <!-- LEFT SIDE: CHARTS AND SUMMARY  -->
+    <div class="col-md-8 col-lg-9 border-end">
+
+      <!-- personal exercise, mood, outgoing  -->
+      <div class="row mb-2">
+        <div class="card">
+          <div class="card-header">
+            Mood
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4 col-lg-4">
+                <div class="card chart-card">
+                  <div class="card-header">Mood Calendar</div>
+                  <div class="card-body">
+                    <div class="mood-grid">
+                      {% for mood in context.personal_trackers_data_compute.mood %}
+                        <div class="mood-cell mood-{{ mood }}">
+                          {{ ['😞','😕','😐','🙂','😀'][mood-1] }}
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-8 col-lg-8">
+                <div class="card">
+                  <div class="card-header">
+                    Daily Activity
+                  </div>
+                  <div class="card-body">
+                    <canvas id="dailyActivityChart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- personal wakeup, sleep and screen time  -->
+      <div class="row mb-2">
+        <div class="col-md-6 col-lg-6">
+          <div class="card chart-card">
+            <div class="card-header">
+              Sleep Cycle
+            </div>
+            <div class="card-body">
+              <canvas id="sleepCycle"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-6">
+          <div class="card chart-card">
+            <div class="card-header">
+              Screen Time
+            </div>
+            <div class="card-body">
+              <canvas id="screenTime"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- work  -->
+      <div class="row mb-2">
+        <div class="col-md-6 col-lg-6">
+          <div class="card chart-card">
+            <div class="card-header">
+              Office Timing
+            </div>
+            <div class="card-body">
+              <canvas id="officeTiming"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-6">
+          <div class="card chart-card">
+            <div class="card-header">
+              Break Time
+            </div>
+            <div class="card-body">
+              <canvas id="breakTime"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- work productivity  -->
+      <div class="row mb-2">
+        <div class="col-md-9 col-lg-9">
+          <div class="card chart-card">
+            <div class="card-header">
+              Productivity
+            </div>
+            <div class="card-body">
+              <canvas id="productivity"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-lg-3">
+          <div class="card chart-card">
+            <div class="card-header">
+              Off Days
+            </div>
+            <div class="card-body">
+              <canvas id="offDays"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDE: DIARY SUMMARY  -->
+    <div class="col-md-4 col-lg-3 border-end" style="max-height: 80vh; overflow-y: auto;">
+      <div class="card chart-card">
+        <div class="card-header">Diary Entries</div>
+        <div class="card-body">
+          {% for entry in context.diary_entries %}
+            <div class="input-group input-group-sm mb-2">
+              <span class="input-group-text">{{ entry.date }}</span>
+              <input type="text"
+                     class="form-control"
+                     value="{{ entry.short_note }}"
+                     readonly>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- charts  -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Mood chart  -->
+<script>
+  const moodChart = document.getElementById('moodChart');
+
+  new Chart(moodChart, {
+    type: 'line',
+    data: {
+      labels: {{ context.personal_trackers_data_compute.date|tojson }},
+      datasets: [{
+        label: 'Mood',
+        data: {{ context.personal_trackers_data_compute.mood }},
+        borderColor: '#4dabf7',
+        backgroundColor: 'rgba(77,171,247,0.15)',
+        fill: true,
+        tension: 0.25,
+        pointRadius: 3
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      scales: {
+        y: {
+          min: 1,
+          max: 5,
+          ticks: {
+            stepSize: 1,
+            callback: v => ['😞','😕','😐','🙂','😀'][v-1]
+          }
+        }
+      },
+      plugins: {
+        legend: { display: false }
+      }
+    }
+  });
+</script>
+
+<!-- Daily Activity chart  -->
+<script>
+  const dailyActivityChart = document.getElementById('dailyActivityChart');
+  // const dailyActivityData = {{ context.personal_trackers_data|safe }}.map(row => ({
+  //     date: row.date,  // date
+  //     water_intake: row.water_intake,
+  //     exercise: row.exercise,
+  //     outgoing: row.outgoing,
+  //     dailyActivity: row.dailyActivity,
+  // }));
+
+  // console.log(dailyActivityData)
+  new Chart(dailyActivityChart, {
+    type: 'line',
+    data: {
+      labels: {{ context.personal_trackers_data_compute.date|tojson }},
+      datasets:[
+        {
+          label: 'Water Intake',
+          data: {{ context.personal_trackers_data_compute.water_intake }},
+          borderWidth: 1,
+          tension: 0.3,
+        },
+        {
+          label: 'Exercise',
+          data: {{ context.personal_trackers_data_compute.exercise }},
+          borderWidth: 1,
+          tension: 0.3,
+        },
+        {
+          label: 'Outgoing',
+          data: {{ context.personal_trackers_data_compute.outgoing }},
+          borderWidth: 1,
+          tension: 0.3,
+        },
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      scales: {
+        y: {
+          min: 0,
+          max: 6,
+          beginAtZero: true,
+          ticks:{
+            stepSize: 1
+          }
+        }
+      }
+    }
+  });
+</script>
+
+<!-- sleep cycle chart  -->
+<script>
+  const sleepCycleChart = document.getElementById('sleepCycle');
+  new Chart(sleepCycleChart, {
+    type: 'line',
+    data: {
+      labels: {{ context.personal_trackers_data_compute.date|tojson }},
+      datasets:[
+        {
+          label: 'Wake Up',
+          data: {{ context.personal_trackers_data_compute.wakeup_time|tojson }},
+          borderWidth: 1,
+          borderColor: 'rgb(237, 242, 99)'
+        },
+        {
+          label: 'Sleep',
+          data: {{ context.personal_trackers_data_compute.sleep_time|tojson }},
+          borderWidth: 1,
+          borderColor: 'rgb(98, 131, 247)'
+        },
+      ]
+    },
+    options: {
+      responsive: true,
+      // maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: (value) => {
+              const h = Math.floor(value / 60);
+              const m = value % 60;
+              return `${h}:${m.toString().padStart(2,'0')}`;
+            }
+          }
+        }
+      }
+    }
+  });
+</script>
+
+<!-- screen time chart  -->
+<script>
+  const screenTimeChart = document.getElementById('screenTime');
+  new Chart(screenTimeChart, {
+    type: 'bar',
+    data: {
+      labels: {{ context.personal_trackers_data_compute.date|tojson }},
+      datasets:[
+        {
+          label: 'Screen Time',
+          data: {{ context.personal_trackers_data_compute.screen_time|tojson }},
+          borderWidth: 1,
+          borderColor: 'rgb(108, 247, 98)',
+          fill: true,
+          tension: 0.5
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      // maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+</script>
+
+<!-- Office Timing  chart  -->
+<script>
+  const officeTimingChart = document.getElementById('officeTiming');
+  new Chart(officeTimingChart, {
+    type: 'line',
+    data: {
+      labels: {{ context.work_trackers_data_compute.date|tojson }},
+      datasets:[
+        {
+          label: 'Wake Up',
+          data: {{ context.work_trackers_data_compute.commute_time|tojson }},
+          borderWidth: 1,
+          borderColor: 'rgb(237, 242, 99)'
+        },
+        {
+          label: 'Sleep',
+          data: {{ context.work_trackers_data_compute.return_time|tojson }},
+          borderWidth: 1,
+          borderColor: 'rgb(98, 131, 247)'
+        },
+      ]
+    },
+    options: {
+      responsive: true,
+      // maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: (value) => {
+              const h = Math.floor(value / 60);
+              const m = value % 60;
+              return `${h}:${m.toString().padStart(2,'0')}`;
+            }
+          }
+        }
+      }
+    }
+  });
+</script>
+
+<!--Break Time chart  -->
+<script>
+  const breakTimeChart = document.getElementById('breakTime');
+  new Chart(breakTimeChart, {
+    type: 'bar',
+    data: {
+      labels: {{ context.work_trackers_data_compute.date|tojson }},
+      datasets:[
+        {
+          label: 'Wake Up',
+          data: {{ context.work_trackers_data_compute.break_time|tojson }},
+          borderWidth: 1,
+          borderColor: 'rgb(237, 242, 99)'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      // maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: (value) => {
+              const h = Math.floor(value / 60);
+              const m = value % 60;
+              return `${h}:${m.toString().padStart(2,'0')}`;
+            }
+          }
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  const productivityChart = document.getElementById('productivity');
+  new Chart(productivityChart, {
+    type: 'line',
+    data: {
+      labels: {{ context.work_trackers_data_compute.date|tojson }},
+      datasets:[
+        {
+          label: 'Given Work',
+          data: {{ context.work_trackers_data_compute.given_work }},
+          borderWidth: 1,
+          tension: 0.3,
+        },
+        {
+          label: 'Completed Work',
+          data: {{ context.work_trackers_data_compute.completed_work }},
+          borderWidth: 1,
+          tension: 0.3,
+        },
+      ]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks:{
+            stepSize: 1
+          }
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  const offDaysChart = document.getElementById('offDays');
+  new Chart(offDaysChart, {
+    type: 'doughnut',
+    data: {
+      labels: ['Work Days', 'Off Days'],
+      datasets:[
+        {
+          label: 'Work Days',
+          data: [{{ context.work_trackers_data_compute.total_days-context.work_trackers_data_compute.off_days }}, {{ context.work_trackers_data_compute.total_days }}],
+          borderWidth: 1,
+          tension: 0.3,
+        },
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      scales: {
+        y: {
+          min: 0,
+          max: 6,
+          beginAtZero: true,
+          ticks:{
+            stepSize: 1
+          }
+        }
+      }
+    }
+  });
+</script>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="https://netdna.bootstrapcdn.com/bootstrap/2.3.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/js/bootstrap-datepicker.min.js"></script>
+
+<script>
+  $("#datepicker").datepicker( {
+      format: "mm-yyyy",
+      startView: "months", 
+      minViewMode: "months"
+  });
+</script>
+{% endblock %}
