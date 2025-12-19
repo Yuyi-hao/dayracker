@@ -5,7 +5,157 @@
 {% endblock %}
 
 {% block main %}
-<input type="text" class="form-control" name="datepicker" id="datepicker" value="{{ context.month }}-{{ context.year }}" onchange="window.location = '?date=' + this.value;"/>
+<div class="container-fluid p-4">
+  <!-- HEADER  -->
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <div>
+      <h2 class="fw-bold mb-1">Monthly Summary for {{ context.month.month_name[1] }} - {{ context.year }}</h2>
+      <p class="text-muted mb-0">Overview of your personal, work trackers and your diary entries.</p>
+    </div>
+    <div class="d-flex gap-2">
+      <input type="month" class="form-control" id="monthPicker" value="{{ context.year }}-{{ context.month.month_num}}" onchange="window.location = '?date=' + this.value;">
+    </div>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-2">
+      <div class="card summary-card p-3 d-flex align-items-center">
+        <div class="metric-label"><span class="fw-semibold">Avg Mood</span></div>
+        <div class="metric-value" id="avgMood">
+
+        </div>
+        <div class="kpi-bar mt-2 mb-2" id="avgMoodKpiBar"></div>
+        <div class="kpi-bar mt-2" id="avgMoodKpiMoodBar"></div>
+      </div>
+    </div>
+
+    <div class="col-md-2">
+      <div class="card summary-card p-3 d-flex">
+        <div class="metric-label d-flex justify-content-between align-items-center mb-2">
+          <span class="fw-semibold">💧 Avg Water Intake</span>
+          <small class="text-muted">Goal 2.5L</small>
+        </div>
+        <div class="metric-value" id="avgWaterIntake">
+          <span class="h4 text-bold">2.1</span>
+          <span class="text-muted mb-3">L/day</span>
+        </div>
+        <div class="progress mb-2">
+          <div class="progress-bar" role="progressbar"></div>
+        </div>
+        <small class="text-muted d-flex justify-content-between align-items-center mb-2">
+          <span>84% of goal days met</span>
+          <!-- Daily Dots -->
+          <div class="d-flex gap-1 flex-wrap">
+            <!-- good hydration -->
+            <span class="rounded-circle" style="width:10px;height:10px;background:#4dabf7;"></span>
+            <!-- low -->
+            <span class="rounded-circle" style="width:10px;height:10px;background:#74c0fc;"></span>
+            <!-- missed -->
+            <span class="rounded-circle" style="width:10px;height:10px;background:#495057;"></span>
+          </div>
+        </small>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="card summary-card p-3">
+        <div class="metric-label">Avg Mood</div>
+        <div class="metric-value" id="avgMood">3.4</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card summary-card p-3">
+        <div class="metric-label">Avg Mood</div>
+        <div class="metric-value" id="avgMood">3.4</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="streak-calender">
+        <div class="calender-days-label">
+          <span class="day-label">Sun</span>
+          <span class="day-label">Mon</span>
+          <span class="day-label">Tue</span>
+          <span class="day-label">Wed</span>
+          <span class="day-label">Thu</span>
+          <span class="day-label">Fri</span>
+          <span class="day-label">Sat</span>
+        </div>
+        <div id="streakCalenderGrid"></div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  function renderStreakCalender(year, month, activeDays=[3, 4, 5, 6]){
+    const grid = document.getElementById('streakCalenderGrid');
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month+1, 0).getDate();
+    grid.innerHTML = "";
+
+    // skip cells in start of month
+    for(let i=0; i<firstDay; i++){
+      const empty = document.createElement('div');
+      empty.className = 'day-cell inactive';
+      grid.appendChild(empty);
+    }
+    
+    for(let day=1; day<=daysInMonth; day++){
+      const cell = document.createElement('div');
+      cell.className = 'day-cell';
+      cell.innerText = day;
+      if(activeDays.includes(day)){
+        const dot = document.createElement('div');
+        dot.className = 'dot-success';
+        cell.appendChild(dot);
+      }
+      grid.appendChild(cell);
+    }
+  }
+
+  renderStreakCalender({{ context.year }}, {{ context.month.month_num }});
+
+  const moodDataCategory = {
+    0: {mood:'None'     , emoji:'⚪', color:`#6c757d`},
+    1: {mood:'Bad'      , emoji:'😞', color:`#dc3545` },
+    2: {mood:'Not good' , emoji:'😕', color:`#fd7e14` },
+    3: {mood:'Neutral'  , emoji:'😐', color:`#adb5bd` },
+    4: {mood:'Good'     , emoji:'🙂', color:`#20c997` },
+    5: {mood:'Amazing'  , emoji:'😄', color:`#0d6efd` }
+  };
+
+  function renderMoodKpiBar(data, averageVal){
+    document.getElementById('avgMood').innerHTML = `<span class="h4 text-bold">${averageVal}</span>
+          <span class="text-muted mb-3">${moodDataCategory[Math.round(averageVal)%6].emoji}</span>`;
+    let total = data.reduce((x, y) => x + y, 0);
+    const kpiBar = document.getElementById('avgMoodKpiBar');
+    const kpiBarMood = document.getElementById('avgMoodKpiMoodBar');
+    for(let i=0; i<6; i++){
+      if(data[i] <= 0) continue;
+      const bar = document.createElement('div');
+      bar.style.background = moodDataCategory[i].color;
+      bar.style.width = `${Math.floor(100*(data[i]/total))}%`;
+      bar.style.height = `100%`;
+      bar.title = moodDataCategory[i].mood;
+      kpiBar.appendChild(bar);
+      const moodVal = document.createElement('div');
+      moodVal.innerText = moodDataCategory[i].emoji;
+      moodVal.style.width = `${Math.floor(100*(data[i]/total))}%`;
+      moodVal.style.height = `100%`;
+      moodVal.style.textAlign = `center`;
+      moodVal.title = moodDataCategory[i].mood;
+      kpiBarMood.appendChild(moodVal);
+    }
+  }
+
+  renderMoodKpiBar([2, 3, 4, 5, 8, 9], 5);
+
+
+</script>
+
+
+
 <div class="py-6 px-3 mt-2">
   <div class="row">
     <!-- LEFT SIDE: CHARTS AND SUMMARY  -->
