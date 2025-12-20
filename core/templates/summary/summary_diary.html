@@ -18,75 +18,609 @@
   </div>
 
   <div class="row g-3 mb-4">
-    <div class="col-md-2">
-      <div class="card summary-card p-3 d-flex align-items-center">
-        <div class="metric-label"><span class="fw-semibold">Avg Mood</span></div>
-        <div class="metric-value" id="avgMood">
 
-        </div>
-        <div class="kpi-bar mt-2 mb-2" id="avgMoodKpiBar"></div>
-        <div class="kpi-bar mt-2" id="avgMoodKpiMoodBar"></div>
-      </div>
-    </div>
+    <!-- LEFT SIDE  -->
+    <div class="col-md-10 col-lg-10">
 
-    <div class="col-md-2">
-      <div class="card summary-card p-3 d-flex">
-        <div class="metric-label d-flex justify-content-between align-items-center mb-2">
-          <span class="fw-semibold">💧 Avg Water Intake</span>
-          <small class="text-muted">Goal 2.5L</small>
-        </div>
-        <div class="metric-value" id="avgWaterIntake">
-          <span class="h4 text-bold">2.1</span>
-          <span class="text-muted mb-3">L/day</span>
-        </div>
-        <div class="progress mb-2">
-          <div class="progress-bar" role="progressbar"></div>
-        </div>
-        <small class="text-muted d-flex justify-content-between align-items-center mb-2">
-          <span>84% of goal days met</span>
-          <!-- Daily Dots -->
-          <div class="d-flex gap-1 flex-wrap">
-            <!-- good hydration -->
-            <span class="rounded-circle" style="width:10px;height:10px;background:#4dabf7;"></span>
-            <!-- low -->
-            <span class="rounded-circle" style="width:10px;height:10px;background:#74c0fc;"></span>
-            <!-- missed -->
-            <span class="rounded-circle" style="width:10px;height:10px;background:#495057;"></span>
+      <!-- Personal data -->
+      <h3 class="h3">Personal</h3>
+      <hr>
+      <div class="row g-2 mb-4">
+        <!-- Mood KPI  -->
+        <div class="col-md-4">
+          <div class="card summary-card p-3 d-flex align-items-center">
+            <div class="metric-label d-flex justify-content-between align-items-center mb-2"><span class="fw-semibold">Avg Mood</span></div>
+            <div class="metric-value" id="avgMood"></div>
+            <!-- TODO: need to change to progress bar -->
+            <div class="kpi-bar   mb-2" id="avgMoodKpiBar"></div>
+            <div class="kpi-bar mt-2" id="avgMoodKpiMoodBar"></div>
           </div>
-        </small>
-      </div>
-    </div>
-    <div class="col-md-2">
-      <div class="card summary-card p-3">
-        <div class="metric-label">Avg Mood</div>
-        <div class="metric-value" id="avgMood">3.4</div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card summary-card p-3">
-        <div class="metric-label">Avg Mood</div>
-        <div class="metric-value" id="avgMood">3.4</div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="streak-calender">
-        <div class="calender-days-label">
-          <span class="day-label">Sun</span>
-          <span class="day-label">Mon</span>
-          <span class="day-label">Tue</span>
-          <span class="day-label">Wed</span>
-          <span class="day-label">Thu</span>
-          <span class="day-label">Fri</span>
-          <span class="day-label">Sat</span>
         </div>
-        <div id="streakCalenderGrid"></div>
+        
+        <!-- Water intake KPI -->
+        <div class="col-md-4">
+          <div class="card summary-card p-3 d-flex">
+            <div class="metric-label d-flex justify-content-between align-items-center mb-2">
+              <span class="fw-semibold">💧 Avg Water Intake</span>
+              <small class="text-muted">Goal 2.5L</small>
+            </div>
+            <div class="metric-value" id="avgWaterIntake">
+              <span class="h4 text-bold">2.1</span>&nbsp;
+              <span class="text-muted mb-3">L/day</span>
+            </div>
+            <div class="progress mb-2">
+              <div class="progress-bar" role="progressbar"></div>
+            </div>
+            <small class="text-muted d-flex justify-content-between align-items-center mb-2">
+              <span>84% of goal days met</span>
+              <!-- Daily Dots -->
+              <div class="d-flex gap-1 flex-wrap">
+                <!-- good hydration -->
+                <span class="rounded-circle" style="width:10px;height:10px;background:#4dabf7;"></span>
+                <!-- low -->
+                <span class="rounded-circle" style="width:10px;height:10px;background:#74c0fc;"></span>
+                <!-- missed -->
+                <span class="rounded-circle" style="width:10px;height:10px;background:#495057;"></span>
+              </div>
+            </small>
+          </div>
+        </div>
+
+        <!-- Screen Time KPI -->
+        <div class="col-md-4">
+          <div class="card summary-card p-3 d-flex">
+            <div class="metric-label d-flex justify-content-between align-items-center mb-2">
+              <span class="fw-semibold">Screen Time</span>
+              <small class="text-muted">2 Hrs</small>
+            </div>
+            <div class="metric-value" id="avgScreenTime"><span class="h4 text-bold">1.4</span>&nbsp;<span class="text-muted mb-3">hrs</span></div>
+            <div class="">
+              <svg width="480" height="30" viewBox="0 0 480 30">
+                
+                <!-- Line -->
+                <polyline
+                id="screenTimeMiniChartLine"
+                fill="none"
+                stroke="#28a745"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                />
+                <!-- Area -->
+                <polyline
+                  id="screenTimeMiniChartArea"
+                  fill="rgba(40,167,69,0.2)"
+                  stroke="none"
+                ></polyline>
+              </svg>
+            </div>
+  
+            <small class="text-muted d-flex justify-content-between align-items-center">
+              <div>
+                <span class="text-semibold">Min</span>
+                <span id="screenTimeMinVal">1.25 hrs</span>
+              </div>
+              <div>
+                <span class="text-semibold">Max</span>
+                <span id="screenTimeMaxVal">1.25 hrs</span>
+              </div>
+            </small>
+  
+          </div>
+        </div>
+
       </div>
+
+      <div class="row g-2 mb-4">
+        
+        <!-- sleep cycle KPI -->
+        <div class="col-md-4">
+          <div class="card summary-card p-3">
+            <div class="metric-label d-flex justify-content-between mb-2">
+              <span class="fw-semibold">Sleep Cycle</span>
+              <small class="text-muted">6-8hrs</small>
+            </div>
+            <div class="mb-0">
+              <div><span class="h4">7.5</span>&nbsp;<small class="text-muted">hrs</small></div>
+              <div><small class="text-muted">Average Sleep Duration</small></div>
+            </div>
+  
+            <div class="d-flex justify-content-between mt-2">
+              <div>
+                <div><span class="h5 text-bold">10:00</span></div>
+                <div><small class="text-muted">Wake</small></div>
+              </div>
+              <div class="text-end">
+                <div><span class="h5 text-bold">10:00</span></div>
+                <small class="text-muted">Sleep</small>
+              </div>
+            </div>
+  
+            <div class="mt-2">
+              <div class="d-flex justify-content-between">
+                <span class="text-muted">Consistency</span>
+                <small id="sleepConsistency" class="text-warning">Medium</small>
+              </div>
+              <div class="progress" style="height: 6px;">
+                <div class="progress-bar bg-warning" style="width: 55%;"></div>
+              </div>
+              <small class="text-muted">±1h 10m variance</small>
+            </div>
+  
+            <button class="btn btn-sm btn-outline-secondary mt-3">
+              View Details
+            </button>
+          </div>
+        </div>
+
+        <!-- Exercise KPI -->
+        <div class="col-md-4">
+          <div class="card summary-card p-3">
+            <div class="metric-label d-flex justify-content-between mb-2">
+              <span class="fw-semibold">Exercise</span>
+              <small class="badge bg-secondary-subtle text-secondary-emphasis d-inline-flex align-items-center gap-1 px-2 py-1 rounded"> <span>🔥</span> <span class="text-muted">|</span > <span class="px-1"> 5 days </span> </small>
+            </div>
+
+            <div class="row g-3">
+              <!-- Number  -->
+              <div class="col-md-6">
+                <div class="mb-2">
+                  <div><span class="h4">3.4</span>&nbsp;<small class="text-muted">medium</small></div>
+                  <div><small class="text-muted">Average exercise</small></div>
+                </div>
+
+                <div class="row mt-3">
+                  <!-- label -->
+                  <div class="d-flex row col-md-6">
+                    <small class="text-bold text-success">Light</small>
+                    <small class="text-bold text-warning">Medium</small>
+                    <small class="text-bold text-danger">Heavy</small>
+                  </div>
+                  <!-- value -->
+                  <div class="d-flex row col-md-6">
+                    <small class="">12 days</small>
+                    <small class="">5 days</small>
+                    <small class="">6 days</small>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Chart  -->
+              <div class="col-md-6 text-body-emphasis">
+                <svg width="170" height="170" viewBox="0 0 170 170">
+                  <g transform="rotate(-210 80 80)">
+
+                    <!-- Background ring -->
+                    <circle
+                      cx="80"
+                      cy="80"
+                      r="60"
+                      fill="none"
+                      stroke="var(--bs-border-color)"
+                      stroke-width="12"
+                      stroke-dasharray="260 120"
+                      stroke-linecap="round"
+                    />
+
+                    <!-- NONE -->
+                    <circle
+                      cx="80"
+                      cy="80"
+                      r="60"
+                      fill="none"
+                      stroke="var(--bs-secondary-color)"
+                      stroke-width="12"
+                      stroke-dasharray="40 340"
+                      stroke-dashoffset="0"
+                      stroke-linecap="round"
+                    />
+
+                    <!-- LIGHT -->
+                    <circle
+                      cx="80"
+                      cy="80"
+                      r="60"
+                      fill="none"
+                      stroke="#0dcaf0"
+                      stroke-width="12"
+                      stroke-dasharray="70 310"
+                      stroke-dashoffset="-40"
+                      stroke-linecap="round"
+                    />
+
+                    <!-- MEDIUM -->
+                    <circle
+                      cx="80"
+                      cy="80"
+                      r="60"
+                      fill="none"
+                      stroke="#ffc107"
+                      stroke-width="12"
+                      stroke-dasharray="60 320"
+                      stroke-dashoffset="-110"
+                      stroke-linecap="round"
+                    />
+
+                    <!-- HEAVY -->
+                    <circle
+                      cx="80"
+                      cy="80"
+                      r="60"
+                      fill="none"
+                      stroke="#198754"
+                      stroke-width="12"
+                      stroke-dasharray="50 330"
+                      stroke-dashoffset="-170"
+                      stroke-linecap="round"
+                    />
+
+                  </g>
+
+                  <!-- Center text 🔥 -->
+                  <text
+                    x="80"
+                    y="75"
+                    text-anchor="middle"
+                    fill="currentColor"
+                    font-size="20"
+                    font-weight="600"
+                  >
+                    18 / 30
+                  </text>
+
+                  <text
+                    x="80"
+                    y="95"
+                    text-anchor="middle"
+                    fill="var(--bs-secondary-color)"
+                    font-size="12"
+                  >
+                    Active Days
+                  </text>
+                </svg>
+
+              </div>
+
+            </div>
+            <button class="btn btn-sm btn-outline-secondary mt-3">
+              View Details
+            </button>
+          </div>
+        </div>
+        
+        <!-- Outgoing KPI -->
+        <div class="col-md-4">
+          <div class="card summary-card p-3">
+            <div class="metric-label d-flex justify-content-between mb-2">
+              <span class="fw-semibold">Outgoing</span>
+              <small class="badge bg-secondary-subtle text-secondary-emphasis d-inline-flex align-items-center gap-1 px-2 py-1 rounded"> <span>🔥</span> <span class="text-muted">|</span > <span class="px-1"> 5 days </span> </small>
+            </div>
+
+            <div class="row g-3">
+              <!-- Number  -->
+              <div class="col-md-6">
+                <div class="mb-2">
+                  <div><span class="h4">15</span>&nbsp;<small class="text-muted">Days</small></div>
+                  <div><small class="text-muted">Most Common (Walk)</small></div>
+                </div>
+
+                <div class="row mt-3">
+                  <!-- label -->
+                  <div class="d-flex row col-md-6">
+                    <small class="text-bold text-success">Essentials</small>
+                    <small class="text-bold text-warning">Walk</small>
+                    <small class="text-bold text-danger">Enjoy</small>
+                  </div>
+                  <!-- value -->
+                  <div class="d-flex row col-md-6">
+                    <small class="">12 days</small>
+                    <small class="">5 days</small>
+                    <small class="">6 days</small>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Chart  -->
+              <div class="col-md-6">
+                <svg width="170" height="170" viewBox="0 0 170 170">
+                  <g transform="rotate(-210 80 80)">
+
+                    <!-- Background ring -->
+                    <circle
+                      cx="80"
+                      cy="80"
+                      r="60"
+                      fill="none"
+                      stroke="var(--bs-border-color)"
+                      stroke-width="12"
+                      stroke-dasharray="260 120"
+                      stroke-linecap="round"
+                    />
+
+                    <!-- NONE -->
+                    <circle
+                      cx="80"
+                      cy="80"
+                      r="60"
+                      fill="none"
+                      stroke="var(--bs-secondary-color)"
+                      stroke-width="12"
+                      stroke-dasharray="40 340"
+                      stroke-dashoffset="0"
+                      stroke-linecap="round"
+                    />
+
+                    <!-- LIGHT -->
+                    <circle
+                      cx="80"
+                      cy="80"
+                      r="60"
+                      fill="none"
+                      stroke="#0dcaf0"
+                      stroke-width="12"
+                      stroke-dasharray="70 310"
+                      stroke-dashoffset="-40"
+                      stroke-linecap="round"
+                    />
+
+                    <!-- MEDIUM -->
+                    <circle
+                      cx="80"
+                      cy="80"
+                      r="60"
+                      fill="none"
+                      stroke="#ffc107"
+                      stroke-width="12"
+                      stroke-dasharray="60 320"
+                      stroke-dashoffset="-110"
+                      stroke-linecap="round"
+                    />
+
+                    <!-- HEAVY -->
+                    <circle
+                      cx="80"
+                      cy="80"
+                      r="60"
+                      fill="none"
+                      stroke="#198754"
+                      stroke-width="12"
+                      stroke-dasharray="50 330"
+                      stroke-dashoffset="-170"
+                      stroke-linecap="round"
+                    />
+
+                  </g>
+
+                  <!-- Center text 🔥 -->
+                  <text
+                    x="80"
+                    y="75"
+                    text-anchor="middle"
+                    fill="currentColor"
+                    font-size="20"
+                    font-weight="600"
+                  >
+                    18 / 30
+                  </text>
+
+                  <text
+                    x="80"
+                    y="95"
+                    text-anchor="middle"
+                    fill="var(--bs-secondary-color)"
+                    font-size="12"
+                  >
+                    Active Days
+                  </text>
+                </svg>
+              </div>
+
+            </div>
+            <button class="btn btn-sm btn-outline-secondary mt-3">
+              View Details
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- work data -->
+      <h3 class="h3">Work</h3>
+      <hr>
+      <div class="row g-2 mb-4">
+        <!-- Office time cycle KPI -->
+        <div class="col-md-4">
+          <div class="card summary-card p-3">
+            <div class="metric-label d-flex justify-content-between mb-2">
+              <span class="fw-semibold">Office Time</span>
+              <small class="text-muted">9:00am-5:00pm</small>
+            </div>
+            <div class="mb-2 d-flex justify-content-between">
+              <div>
+                <div><span class="h4">7.5</span>&nbsp;<small class="text-muted">hrs ↓ 0.5 hrs below expected</small></div>
+                <div><small class="text-muted">Average Office Duration</small></div>
+              </div>
+              <div class="text-end">
+                <div><span class="h4">75</span>&nbsp;<small class="text-muted">%</small></div>
+                <div><small class="text-muted">Punctuality</small></div>
+              </div>
+            </div>
+  
+            <div class="d-flex justify-content-between mt-2">
+              <div>
+                <div><span class="h5 text-bold">10:00 am</span></div>
+                <div><small class="text-muted">Avg Arrival</small></div>
+              </div>
+              <div class="text-end">
+                <div><span class="h5 text-bold">10:00 pm</span></div>
+                <small class="text-muted">Avg Departure</small>
+              </div>
+            </div>
+  
+            <div class="mt-2">
+              <div class="d-flex justify-content-between">
+                <span class="text-muted">Consistency</span>
+                <small id="sleepConsistency" class="text-warning">Medium</small>
+              </div>
+              <div class="progress" style="height: 6px;">
+                <div class="progress-bar bg-warning" style="width: 55%;"></div>
+              </div>
+              <small class="text-muted">±1h 10m variance</small>
+            </div>
+  
+            <button class="btn btn-sm btn-outline-secondary mt-3">
+              View Details
+            </button>
+          </div>
+        </div>
+
+        <div class="col-md-8 col-lg-4">
+          <div class="card summary-card p-3">
+            <div class="class metric-label d-flex justify-content-between mb-2">
+              <span class="fw-semibold">Breaks</span>
+              <small class="text-muted">Assigned Time Break: 30 min</small>
+            </div>
+
+            <div class="mb-2">
+              <div><span class="h4">38</span>&nbsp;<small class="text-muted">min/day</small></div>
+              <div><small class="text-muted">Average Break duration</small></div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-1">
+              <small class="text-muted">No-break days</small>
+              <small class="text-danger">6 days</small>
+            </div>
+
+            <div class="progress mt-2 mb-4" style="height:6px">
+              <div class="progress-bar bg-info" style="width:60%"></div>
+            </div>
+            <svg
+              viewBox="0 0 300 100"
+              width="100%"
+              height="80"
+              preserveAspectRatio="none"
+            >
+              <g id="breakBars"></g>
+            </svg>
+            <small class="text-muted d-flex justify-content-between align-items-center">
+              <div>
+                <span class="text-semibold">Min</span>
+                <span id="screenTimeMinVal">1.25 hrs</span>
+              </div>
+              <div>
+                <span class="text-semibold">Max</span>
+                <span id="screenTimeMaxVal">1.25 hrs</span>
+              </div>
+            </small>
+
+
+          </div>
+        </div>
+
+        <div class="col-md-8 col-lg-4">
+          <div class="row mb-2">
+            <div class="col-md-12">
+              <div class="card summary-card p-3">
+                <div class="class metric-label d-flex justify-content-between mb-2">
+                  <span class="fw-semibold">Off Days</span>
+                  <small class="text-muted">8 weekend days</small>
+                </div>
+                <div class="mb-2 d-flex justify-content-between">
+                  <div>
+                    <div><span class="h4">6</span>&nbsp;<small class="text-muted">Off Days</small></div>
+                  </div>
+                  <div>
+                    <div><span class="h4">12</span>&nbsp;<small class="text-muted">Work Days</small></div>
+                  </div>
+                  <div>
+                    <div><span class="h4">12</span>&nbsp;<small class="text-muted">Leaves</small></div>
+                  </div>
+                  <div>
+                    <div><span class="h4">12</span>&nbsp;<small class="text-muted">Holidays</small></div>
+                  </div>
+                </div>
+                <div>
+                  <small class="text-muted">Moderate recovery</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card summary-card p-3">
+                <div class="class metric-label d-flex justify-content-between mb-2">
+                  <span class="fw-semibold">WorkLoad</span>
+                  <small class="text-muted"><div class="badge bg-danger">moderate</div></small>
+                </div>
+                <div class="mb-2">
+                  <div><span class="h4">3.8</span>&nbsp;<small class="text-muted">/5</small></div>
+                  <div><small class="text-muted">Average workload</small></div>
+                </div>
+                <div class="mb-2">
+                  <span class="badge bg-warning text-dark me-1">Tiring</span>
+                  <span class="badge bg-danger">Hectic</span>
+                  <small class="text-muted ms-2">42% of days</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row g-2 mb-4">
+        <div class="col-md-8 col-lg-8">
+          <div class="card summary-card p-3 h-100">
+            <div class="metric-label d-flex justify-content-between mb-2">
+              <span class="fw-semibold">Productivity</span>
+              <small class="text-muted">Assigned vs Completed</small>
+            </div>
+
+            <canvas id="productivityChart" height="140"></canvas>
+          </div>
+
+        </div>
+        <div class="col-md-4 col-lg-4">
+          <div class="card summary-card p-3 h-100">
+            <div class="metric-label mb-2">
+              <span class="fw-semibold">Work Balance Overview</span>
+            </div>
+
+            <canvas id="workRadarChart" height="220"></canvas>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    
+    <!-- RIGHT SIDE  -->
+    <div class="col-md-2 col-lg-2">
+      <!-- Calender -->
+      <div class="col-md-12">
+        <div class="streak-calender">
+          <div class="calender-days-label">
+            <span class="day-label">Sun</span>
+            <span class="day-label">Mon</span>
+            <span class="day-label">Tue</span>
+            <span class="day-label">Wed</span>
+            <span class="day-label">Thu</span>
+            <span class="day-label">Fri</span>
+            <span class="day-label">Sat</span>
+          </div>
+          <div id="streakCalenderGrid"></div>
+        </div>
+      </div>
+
     </div>
 
   </div>
 
 </div>
 
+
+<!-- charts  -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
   function renderStreakCalender(year, month, activeDays=[3, 4, 5, 6]){
     const grid = document.getElementById('streakCalenderGrid');
@@ -151,467 +685,139 @@
 
   renderMoodKpiBar([2, 3, 4, 5, 8, 9], 5);
 
+  function renderScreenTimeSparkLineChart(data, width, height){
+    const max = Math.max(...data);
+    const min = Math.min(...data);
 
-</script>
+    const pointsData =  data.map((value, i)=>{
+      let x = (i/(data.length-1))*width;
+      let y = height-((value-min)/(max-min))*height;
+      return {x, y};
+    })
+    
+    document.getElementById("screenTimeMiniChartLine").setAttribute("points", pointsData.map((p) => `${p.x},${p.y}`).join(" "));
+    document.getElementById("screenTimeMiniChartArea").setAttribute("points", [`0,${height}`, ...pointsData.map((p) => `${p.x},${p.y}`), `${width},${height}`].join(" "));
+    document.getElementById("screenTimeMinVal").innerText = `${min} mins`;
+    document.getElementById("screenTimeMaxVal").innerText = `${max} mins`;
+  }
 
+  renderScreenTimeSparkLineChart({{ context.personal_trackers_data_compute.screen_time|tojson }}, 740, 25);
 
+  function renderBreakBarChart(data) {
+  const svgGroup = document.getElementById("breakBars");
+  svgGroup.innerHTML = "";
 
-<div class="py-6 px-3 mt-2">
-  <div class="row">
-    <!-- LEFT SIDE: CHARTS AND SUMMARY  -->
-    <div class="col-md-8 col-lg-9 border-end">
+  const width = 300;
+  const height = 80;
+  const barGap = 2;
 
-      <!-- personal exercise, mood, outgoing  -->
-      <div class="row mb-2">
-        <div class="card">
-          <div class="card-header">
-            Mood
-          </div>
-          <div class="card-body">
-            <div class="row">
-              <div class="col-md-4 col-lg-4">
-                <div class="card chart-card">
-                  <div class="card-header">Mood Calendar</div>
-                  <div class="card-body">
-                    <div class="mood-grid">
-                      {% for mood in context.personal_trackers_data_compute.mood %}
-                        <div class="mood-cell mood-{{ mood }}">
-                          {{ ['😞','😕','😐','🙂','😀'][mood-1] }}
-                        </div>
-                      {% endfor %}
-                    </div>
-                  </div>
-                </div>
-              </div>
+  const max = Math.max(...data, 30); // avoid flat bars
+  const barWidth = width / data.length;
 
-              <div class="col-md-8 col-lg-8">
-                <div class="card">
-                  <div class="card-header">
-                    Daily Activity
-                  </div>
-                  <div class="card-body">
-                    <canvas id="dailyActivityChart"></canvas>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+  data.forEach((value, i) => {
+    const barHeight = (value / max) * height;
+    const x = i * barWidth;
+    const y = height - barHeight;
 
-      <!-- personal wakeup, sleep and screen time  -->
-      <div class="row mb-2">
-        <div class="col-md-6 col-lg-6">
-          <div class="card chart-card">
-            <div class="card-header">
-              Sleep Cycle
-            </div>
-            <div class="card-body">
-              <canvas id="sleepCycle"></canvas>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6 col-lg-6">
-          <div class="card chart-card">
-            <div class="card-header">
-              Screen Time
-            </div>
-            <div class="card-body">
-              <canvas id="screenTime"></canvas>
-            </div>
-          </div>
-        </div>
-      </div>
+    const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    rect.setAttribute("x", x + barGap / 2);
+    rect.setAttribute("y", y);
+    rect.setAttribute("width", barWidth - barGap);
+    rect.setAttribute("height", barHeight);
+    rect.setAttribute("rx", 2);
 
-      <!-- work  -->
-      <div class="row mb-2">
-        <div class="col-md-6 col-lg-6">
-          <div class="card chart-card">
-            <div class="card-header">
-              Office Timing
-            </div>
-            <div class="card-body">
-              <canvas id="officeTiming"></canvas>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6 col-lg-6">
-          <div class="card chart-card">
-            <div class="card-header">
-              Break Time
-            </div>
-            <div class="card-body">
-              <canvas id="breakTime"></canvas>
-            </div>
-          </div>
-        </div>
-      </div>
+    // color logic
+    rect.setAttribute(
+      "fill",
+      value < 20 ? "#dc3545" : value < 40 ? "#ffc107" : "#198754"
+    );
 
-      <!-- work productivity  -->
-      <div class="row mb-2">
-        <div class="col-md-9 col-lg-9">
-          <div class="card chart-card">
-            <div class="card-header">
-              Productivity
-            </div>
-            <div class="card-body">
-              <canvas id="productivity"></canvas>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3 col-lg-3">
-          <div class="card chart-card">
-            <div class="card-header">
-              Off Days
-            </div>
-            <div class="card-body">
-              <canvas id="offDays"></canvas>
-            </div>
-          </div>
-        </div>
-      </div>
+    svgGroup.appendChild(rect);
+  });
 
-    </div>
+  const avg =
+    data.reduce((a, b) => a + b, 0) / data.length;
+  document.getElementById("breakAvg").innerText = avg.toFixed(0);
+}
 
-    <!-- RIGHT SIDE: DIARY SUMMARY  -->
-    <div class="col-md-4 col-lg-3 border-end" style="max-height: 80vh; overflow-y: auto;">
-      <div class="card chart-card">
-        <div class="card-header">Diary Entries</div>
-        <div class="card-body">
-          {% for entry in context.diary_entries %}
-            <div class="input-group input-group-sm mb-2">
-              <span class="input-group-text">{{ entry.date }}</span>
-              <input type="text"
-                     class="form-control"
-                     value="{{ entry.short_note }}"
-                     readonly>
-            </div>
-          {% endfor %}
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+renderBreakBarChart([
+  15, 20, 10, 30, 45, 25, 20,
+  15, 10, 40, 35, 20, 25,
+  30, 15, 10, 20, 25,
+  30, 35, 40, 20, 15,
+  10, 30, 45, 20, 25, 30
+]);
 
-<!-- charts  -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+const ctxProd = document.getElementById('productivityChart');
 
-<!-- Mood chart  -->
-<script>
-  const moodChart = document.getElementById('moodChart');
-
-  new Chart(moodChart, {
-    type: 'line',
-    data: {
-      labels: {{ context.personal_trackers_data_compute.date|tojson }},
-      datasets: [{
-        label: 'Mood',
-        data: {{ context.personal_trackers_data_compute.mood }},
-        borderColor: '#4dabf7',
-        backgroundColor: 'rgba(77,171,247,0.15)',
-        fill: true,
-        tension: 0.25,
-        pointRadius: 3
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      scales: {
-        y: {
-          min: 1,
-          max: 5,
-          ticks: {
-            stepSize: 1,
-            callback: v => ['😞','😕','😐','🙂','😀'][v-1]
-          }
-        }
+new Chart(ctxProd, {
+  type: 'bar',
+  data: {
+    labels: ['Mon','Tue','Wed','Thu','Fri','Sat'],
+    datasets: [
+      {
+        label: 'Assigned',
+        data: [8, 7, 9, 8, 6, 5],
+        backgroundColor: 'rgba(108,117,125,0.4)'
       },
-      plugins: {
-        legend: { display: false }
+      {
+        label: 'Completed',
+        data: [7, 6, 9, 6, 5, 4],
+        backgroundColor: 'rgba(25,135,84,0.6)'
       }
-    }
-  });
-</script>
-
-<!-- Daily Activity chart  -->
-<script>
-  const dailyActivityChart = document.getElementById('dailyActivityChart');
-  // const dailyActivityData = {{ context.personal_trackers_data|safe }}.map(row => ({
-  //     date: row.date,  // date
-  //     water_intake: row.water_intake,
-  //     exercise: row.exercise,
-  //     outgoing: row.outgoing,
-  //     dailyActivity: row.dailyActivity,
-  // }));
-
-  // console.log(dailyActivityData)
-  new Chart(dailyActivityChart, {
-    type: 'line',
-    data: {
-      labels: {{ context.personal_trackers_data_compute.date|tojson }},
-      datasets:[
-        {
-          label: 'Water Intake',
-          data: {{ context.personal_trackers_data_compute.water_intake }},
-          borderWidth: 1,
-          tension: 0.3,
-        },
-        {
-          label: 'Exercise',
-          data: {{ context.personal_trackers_data_compute.exercise }},
-          borderWidth: 1,
-          tension: 0.3,
-        },
-        {
-          label: 'Outgoing',
-          data: {{ context.personal_trackers_data_compute.outgoing }},
-          borderWidth: 1,
-          tension: 0.3,
-        },
-      ]
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'bottom' }
     },
-    options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      scales: {
-        y: {
-          min: 0,
-          max: 6,
-          beginAtZero: true,
-          ticks:{
-            stepSize: 1
-          }
-        }
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: { stepSize: 2 }
       }
     }
-  });
-</script>
+  }
+});
 
-<!-- sleep cycle chart  -->
-<script>
-  const sleepCycleChart = document.getElementById('sleepCycle');
-  new Chart(sleepCycleChart, {
-    type: 'line',
-    data: {
-      labels: {{ context.personal_trackers_data_compute.date|tojson }},
-      datasets:[
-        {
-          label: 'Wake Up',
-          data: {{ context.personal_trackers_data_compute.wakeup_time|tojson }},
-          borderWidth: 1,
-          borderColor: 'rgb(237, 242, 99)'
-        },
-        {
-          label: 'Sleep',
-          data: {{ context.personal_trackers_data_compute.sleep_time|tojson }},
-          borderWidth: 1,
-          borderColor: 'rgb(98, 131, 247)'
-        },
-      ]
+
+const ctxRadar = document.getElementById('workRadarChart');
+
+new Chart(ctxRadar, {
+  type: 'radar',
+  data: {
+    labels: [
+      'Consistency',
+      'Productivity',
+      'Breaks',
+      'Punctuality',
+      'Workload'
+    ],
+    datasets: [{
+      label: 'This Month',
+      data: [65, 75, 50, 70, 60],
+      fill: true,
+      backgroundColor: 'rgba(13,110,253,0.15)',
+      borderColor: 'rgba(13,110,253,0.8)',
+      pointBackgroundColor: 'rgba(13,110,253,1)'
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false }
     },
-    options: {
-      responsive: true,
-      // maintainAspectRatio: false,
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            callback: (value) => {
-              const h = Math.floor(value / 60);
-              const m = value % 60;
-              return `${h}:${m.toString().padStart(2,'0')}`;
-            }
-          }
-        }
+    scales: {
+      r: {
+        min: 0,
+        max: 100,
+        ticks: { display: false }
       }
     }
-  });
-</script>
+  }
+});
 
-<!-- screen time chart  -->
-<script>
-  const screenTimeChart = document.getElementById('screenTime');
-  new Chart(screenTimeChart, {
-    type: 'bar',
-    data: {
-      labels: {{ context.personal_trackers_data_compute.date|tojson }},
-      datasets:[
-        {
-          label: 'Screen Time',
-          data: {{ context.personal_trackers_data_compute.screen_time|tojson }},
-          borderWidth: 1,
-          borderColor: 'rgb(108, 247, 98)',
-          fill: true,
-          tension: 0.5
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      // maintainAspectRatio: false,
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  });
-</script>
-
-<!-- Office Timing  chart  -->
-<script>
-  const officeTimingChart = document.getElementById('officeTiming');
-  new Chart(officeTimingChart, {
-    type: 'line',
-    data: {
-      labels: {{ context.work_trackers_data_compute.date|tojson }},
-      datasets:[
-        {
-          label: 'Wake Up',
-          data: {{ context.work_trackers_data_compute.commute_time|tojson }},
-          borderWidth: 1,
-          borderColor: 'rgb(237, 242, 99)'
-        },
-        {
-          label: 'Sleep',
-          data: {{ context.work_trackers_data_compute.return_time|tojson }},
-          borderWidth: 1,
-          borderColor: 'rgb(98, 131, 247)'
-        },
-      ]
-    },
-    options: {
-      responsive: true,
-      // maintainAspectRatio: false,
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            callback: (value) => {
-              const h = Math.floor(value / 60);
-              const m = value % 60;
-              return `${h}:${m.toString().padStart(2,'0')}`;
-            }
-          }
-        }
-      }
-    }
-  });
-</script>
-
-<!--Break Time chart  -->
-<script>
-  const breakTimeChart = document.getElementById('breakTime');
-  new Chart(breakTimeChart, {
-    type: 'bar',
-    data: {
-      labels: {{ context.work_trackers_data_compute.date|tojson }},
-      datasets:[
-        {
-          label: 'Wake Up',
-          data: {{ context.work_trackers_data_compute.break_time|tojson }},
-          borderWidth: 1,
-          borderColor: 'rgb(237, 242, 99)'
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      // maintainAspectRatio: false,
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            callback: (value) => {
-              const h = Math.floor(value / 60);
-              const m = value % 60;
-              return `${h}:${m.toString().padStart(2,'0')}`;
-            }
-          }
-        }
-      }
-    }
-  });
-</script>
-
-<script>
-  const productivityChart = document.getElementById('productivity');
-  new Chart(productivityChart, {
-    type: 'line',
-    data: {
-      labels: {{ context.work_trackers_data_compute.date|tojson }},
-      datasets:[
-        {
-          label: 'Given Work',
-          data: {{ context.work_trackers_data_compute.given_work }},
-          borderWidth: 1,
-          tension: 0.3,
-        },
-        {
-          label: 'Completed Work',
-          data: {{ context.work_trackers_data_compute.completed_work }},
-          borderWidth: 1,
-          tension: 0.3,
-        },
-      ]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks:{
-            stepSize: 1
-          }
-        }
-      }
-    }
-  });
-</script>
-
-<script>
-  const offDaysChart = document.getElementById('offDays');
-  new Chart(offDaysChart, {
-    type: 'doughnut',
-    data: {
-      labels: ['Work Days', 'Off Days'],
-      datasets:[
-        {
-          label: 'Work Days',
-          data: [{{ context.work_trackers_data_compute.total_days-context.work_trackers_data_compute.off_days }}, {{ context.work_trackers_data_compute.total_days }}],
-          borderWidth: 1,
-          tension: 0.3,
-        },
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      scales: {
-        y: {
-          min: 0,
-          max: 6,
-          beginAtZero: true,
-          ticks:{
-            stepSize: 1
-          }
-        }
-      }
-    }
-  });
-</script>
-
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script src="https://netdna.bootstrapcdn.com/bootstrap/2.3.2/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/js/bootstrap-datepicker.min.js"></script>
-
-<script>
-  $("#datepicker").datepicker( {
-      format: "mm-yyyy",
-      startView: "months", 
-      minViewMode: "months"
-  });
 </script>
 {% endblock %}
