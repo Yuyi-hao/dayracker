@@ -92,3 +92,66 @@ body {
 .mood-3 { background: #6c6c3c; }
 .mood-4 { background: #2f6b4f; }
 .mood-5 { background: #1f7a5c; }
+
+
+.streak-calender{
+  color: #adb5bd;
+}
+
+#streakCalenderGrid{
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.calender-days-label{
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.day-label{
+  height: 36px;
+  font-size: 0.75rem;
+  margin-bottom: 4px;
+  display: flex-inline;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: bold;
+}
+
+.day-cell{
+  height: 36px;
+  font-weight: 600;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  position: relative;
+  flex-direction: column;
+  background: var(--bs-body-bg);
+  /* border: 1px solid var(--bs-border-color); */
+}
+
+.day-cell.inactive{
+  background: transparent;
+}
+
+.dot-success{
+  width: 6px;
+  height: 6px;
+  background: #22c55e;
+  border-radius: 50%;
+}
+
+.kpi-bar{
+  width: 80%;
+  display: flex;
+}
+
+#avgMoodKpiBar{
+  height: 12px;
+  border-radius: 3px;
+  overflow: hidden;
+}
