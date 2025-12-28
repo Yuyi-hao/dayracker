@@ -47,7 +47,7 @@ def user_day_entry():
         AND ct.is_active = 1
         ORDER BY ct.id ASC
     """
-    custom_trackers = db.execute(sql, (user_id, date, user_id)).fetchall()
+    custom_trackers = [] # db.execute(sql, (user_id, date, user_id)).fetchall()
     
     context = {
         "day_entry_for_user": day_entry_for_user,

@@ -196,6 +196,7 @@
                         </div>
                     </div>
                     
+                    {% if context.custom_trackers %}
                     <div class="row mt-4">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center gap-2">
@@ -252,6 +253,7 @@
                                 </div>
                             {% endif %}
                         {% endfor %}
+                        {% endif %}
                     </div>
                 </div>
             </div>
