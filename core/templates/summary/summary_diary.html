@@ -30,7 +30,7 @@
         <div class="col-md-4">
           <div class="card summary-card p-3 d-flex align-items-center">
             <div class="metric-label d-flex justify-content-between align-items-center mb-2"><span class="fw-semibold">Avg Mood</span></div>
-            <div class="metric-value" id="avgMood"><span class="h4 text-bold">{{ '%0.1f' % context.personal_trackers_data_compute.mood.avg.val|float }}</span>{{ context.personal_trackers_data_compute.mood.avg.emoji }}</span> </div>
+              <div class="metric-value" id="avgMood"><span class="h4 text-bold">{{ '%0.1f' % context.personal_trackers_data_compute.mood.avg.val|float }}</span>{{ context.personal_trackers_data_compute.mood.avg.emoji }}</span> </div>
             <!-- TODO: need to change to progress bar -->
             <div class="kpi-bar   mb-2" id="avgMoodKpiBar"></div>
             <div class="kpi-bar mt-2" id="avgMoodKpiMoodBar"></div>
@@ -151,7 +151,7 @@
               <div class="progress" style="height: 6px;">
                 <div class="progress-bar bg-warning" style="width: 55%;"></div>
               </div>
-              <small class="text-muted">±1h 10m variance</small>
+              <small class="text-muted">±{{ context.personal_trackers_data_compute.sleep.variance_human }} variance</small>
             </div>
   
             <button class="btn btn-sm btn-outline-secondary mt-3">
@@ -165,7 +165,7 @@
           <div class="card summary-card p-3">
             <div class="metric-label d-flex justify-content-between mb-2">
               <span class="fw-semibold">Exercise</span>
-              <small class="badge bg-secondary-subtle text-secondary-emphasis d-inline-flex align-items-center gap-1 px-2 py-1 rounded"> <span>🔥</span> <span class="text-muted">|</span > <span class="px-1"> 5 days </span> </small>
+              <small class="badge bg-secondary-subtle text-secondary-emphasis d-inline-flex align-items-center gap-1 px-2 py-1 rounded"> <span>🔥</span> <span class="text-muted">|</span > <span class="px-1"> {{ context.personal_trackers_data_compute.exercise.streak }} days </span> </small>
             </div>
 
             <div class="row g-3">
@@ -283,7 +283,7 @@
                     font-size="20"
                     font-weight="600"
                   >
-                    18 / 30
+                    {{ context.personal_trackers_data_compute.exercise.days }} / {{ context.month.month_days }}
                   </text>
 
                   <text
@@ -311,32 +311,30 @@
           <div class="card summary-card p-3">
             <div class="metric-label d-flex justify-content-between mb-2">
               <span class="fw-semibold">Outgoing</span>
-              <small class="badge bg-secondary-subtle text-secondary-emphasis d-inline-flex align-items-center gap-1 px-2 py-1 rounded"> <span>🔥</span> <span class="text-muted">|</span > <span class="px-1"> 5 days </span> </small>
+              <small class="badge bg-secondary-subtle text-secondary-emphasis d-inline-flex align-items-center gap-1 px-2 py-1 rounded"> <span>🔥</span> <span class="text-muted">|</span > <span class="px-1"> {{ context.personal_trackers_data_compute.outgoing.streak }} days </span> </small>
             </div>
 
             <div class="row g-3">
               <!-- Number  -->
               <div class="col-md-7">
                 <div class="mb-2">
-                  <div><span class="h4">15</span>&nbsp;<small class="text-muted">Days</small></div>
-                  <div><small class="text-muted">Most Common (Walk)</small></div>
+                  <div><span class="h4">{{ context.personal_trackers_data_compute.outgoing.total_days }}</span>&nbsp;<small class="text-muted">Days</small></div>
+                  <div><small class="text-muted">Most Common ({% if context.personal_trackers_data_compute.outgoing.most_common == 1  %} Essentials {% elif context.personal_trackers_data_compute.outgoing.most_common == 2  %}  Walk  {% elif context.personal_trackers_data_compute.outgoing.most_common == 3  %} Enjoy {% endif %}  )</small></div>
                 </div>
 
                 <div class="row mt-3">
-                  <div class="row mt-3">
-                    <div class="row col-md-12">
-                      <div class="d-flex justify-content-between mt-1">
-                        <small class="text-bold text-success">Essentials</small>
-                        <small class="">12 days</small>
-                      </div>
-                      <div class="d-flex justify-content-between mt-1">
-                        <small class="text-bold text-warning">Walk</small>
-                        <small class="">12 days</small>
-                      </div>
-                      <div class="d-flex justify-content-between mt-1">
-                        <small class="text-bold text-danger">Enjoy</small>
-                        <small class="">12 days</small>
-                      </div>
+                  <div class="row col-md-12">
+                    <div class="d-flex justify-content-between mt-1">
+                      <small class="text-bold text-danger">Essentials</small>
+                      <small class="">{{ context.personal_trackers_data_compute.outgoing.distribution[1]}} days</small>
+                    </div>
+                    <div class="d-flex justify-content-between mt-1">
+                      <small class="text-bold text-warning">Walk</small>
+                      <small class="">{{ context.personal_trackers_data_compute.outgoing.distribution[2]}} days</small>
+                    </div>
+                    <div class="d-flex justify-content-between mt-1">
+                      <small class="text-bold text-success">Enjoy</small>
+                      <small class="">{{ context.personal_trackers_data_compute.outgoing.distribution[3]}} days</small>
                     </div>
                   </div>
                 </div>
@@ -423,7 +421,7 @@
                     font-size="20"
                     font-weight="600"
                   >
-                    18 / 30
+                    {{ context.personal_trackers_data_compute.outgoing.total_days }} / {{ context.month.month_days }}
                   </text>
 
                   <text
@@ -450,7 +448,7 @@
       <!-- work data -->
       <h3 class="h3">Work</h3>
       <hr>
-      <div class="row g-2 mb-4">
+      <div class="row g-2 mb-4 d-flex align-items-stretch">
         <!-- Office time cycle KPI -->
         <div class="col-md-4">
           <div class="card summary-card p-3">
@@ -460,7 +458,7 @@
             </div>
             <div class="mb-2 d-flex justify-content-between">
               <div>
-                <div><span class="h4">7.5</span>&nbsp;<small class="text-muted">hrs ↓ 0.5 hrs below expected</small></div>
+                <div><span class="h4">{{ context.work_trackers_data_compute.office_time.avg_duration }}</span>&nbsp;<small class="text-muted">hrs {% if  context.work_trackers_data_compute.office_time.change_in_duration > 0 %}↓ {% else %} ↑ {% endif %} {{ context.work_trackers_data_compute.office_time.change_in_duration }} hrs below expected</small></div>
                 <div><small class="text-muted">Average Office Duration</small></div>
               </div>
               <div class="text-end">
@@ -471,11 +469,11 @@
   
             <div class="d-flex justify-content-between mt-2">
               <div>
-                <div><span class="h5 text-bold">10:00 am</span></div>
+                <div><span class="h5 text-bold">{{ context.work_trackers_data_compute.office_time.avg_commute_time }}</span></div>
                 <div><small class="text-muted">Avg Arrival</small></div>
               </div>
               <div class="text-end">
-                <div><span class="h5 text-bold">10:00 pm</span></div>
+                <div><span class="h5 text-bold">{{ context.work_trackers_data_compute.office_time.avg_return_time }}</span></div>
                 <small class="text-muted">Avg Departure</small>
               </div>
             </div>
@@ -488,7 +486,7 @@
               <div class="progress" style="height: 6px;">
                 <div class="progress-bar bg-warning" style="width: 55%;"></div>
               </div>
-              <small class="text-muted">±1h 10m variance</small>
+              <small class="text-muted">±{{ context.work_trackers_data_compute.office_time.variance_human }} Duration Variance</small>
             </div>
   
             <button class="btn btn-sm btn-outline-secondary mt-3">
@@ -505,13 +503,13 @@
             </div>
 
             <div class="mb-2">
-              <div><span class="h4">38</span>&nbsp;<small class="text-muted">min/day</small></div>
+              <div><span class="h4">{{ '%d' % context.work_trackers_data_compute.break_time.avg }}</span>&nbsp;<small class="text-muted">min/day</small></div>
               <div><small class="text-muted">Average Break duration</small></div>
             </div>
 
             <div class="d-flex justify-content-between mt-1">
               <small class="text-muted">No-break days</small>
-              <small class="text-danger">6 days</small>
+              <small class="text-danger">{{ context.work_trackers_data_compute.break_time.no_break_days }} days</small>
             </div>
 
             <div class="progress mt-2 mb-4" style="height:6px">
@@ -528,11 +526,11 @@
             <small class="text-muted d-flex justify-content-between align-items-center">
               <div>
                 <span class="text-semibold">Min</span>
-                <span id="screenTimeMinVal">1.25 hrs</span>
+                <span id="screenTimeMinVal">{{ '%d' % context.work_trackers_data_compute.break_time.min_break_time }} mins</span>
               </div>
               <div>
                 <span class="text-semibold">Max</span>
-                <span id="screenTimeMaxVal">1.25 hrs</span>
+                <span id="screenTimeMaxVal">{{ '%d' % context.work_trackers_data_compute.break_time.max_break_time }} mins</span>
               </div>
             </small>
 
@@ -548,18 +546,18 @@
                   <span class="fw-semibold">Off Days</span>
                   <small class="text-muted">8 weekend days</small>
                 </div>
-                <div class="mb-2 d-flex justify-content-between">
+                <div class="mb-2 d-flex justify-content-between flex-wrap text-center">
                   <div>
-                    <div><span class="h4">6</span>&nbsp;<small class="text-muted">Off Days</small></div>
+                    <div><span class="h4">{{ context.work_trackers_data_compute.work_off_days }}</span>&nbsp;<small class="text-muted">Off Days</small></div>
                   </div>
                   <div>
-                    <div><span class="h4">12</span>&nbsp;<small class="text-muted">Work Days</small></div>
+                    <div><span class="h4">{{ context.work_trackers_data_compute.work_work_days }}</span>&nbsp;<small class="text-muted">Work Days</small></div>
                   </div>
                   <div>
-                    <div><span class="h4">12</span>&nbsp;<small class="text-muted">Leaves</small></div>
+                    <div><span class="h4">{{ context.work_trackers_data_compute.work_leave_days }}</span>&nbsp;<small class="text-muted">Leaves</small></div>
                   </div>
                   <div>
-                    <div><span class="h4">12</span>&nbsp;<small class="text-muted">Holidays</small></div>
+                    <div><span class="h4">{{ context.work_trackers_data_compute.work_holidays }}</span>&nbsp;<small class="text-muted">Holidays</small></div>
                   </div>
                 </div>
                 <div>
@@ -573,16 +571,16 @@
               <div class="card summary-card p-3">
                 <div class="class metric-label d-flex justify-content-between mb-2">
                   <span class="fw-semibold">WorkLoad</span>
-                  <small class="text-muted"><div class="badge bg-danger">moderate</div></small>
+                  <small class="text-muted"><div class="badge bg-danger">{{context.work_trackers_data_compute.workload.word}}</div></small>
                 </div>
                 <div class="mb-2">
-                  <div><span class="h4">3.8</span>&nbsp;<small class="text-muted">/5</small></div>
+                  <div><span class="h4">{{ '%0.1f'% context.work_trackers_data_compute.workload.avg.val }}</span>&nbsp;<small class="text-muted">/5</small></div>
                   <div><small class="text-muted">Average workload</small></div>
                 </div>
                 <div class="mb-2">
-                  <span class="badge bg-warning text-dark me-1">Tiring</span>
-                  <span class="badge bg-danger">Hectic</span>
-                  <small class="text-muted ms-2">42% of days</small>
+                  <span class="badge bg-warning text-dark me-1">{{ context.work_trackers_data_compute.workload.top_two_workload[0][0] }}</span>
+                  <span class="badge bg-danger">{{ context.work_trackers_data_compute.workload.top_two_workload[1][0] }}</span>
+                  <small class="text-muted ms-2">{{ '%0.1f' % context.work_trackers_data_compute.workload.top_two_workload_percentage }}% of days</small>
                 </div>
               </div>
             </div>
@@ -597,8 +595,17 @@
               <span class="fw-semibold">Productivity</span>
               <small class="text-muted">Assigned vs Completed</small>
             </div>
-
-            <canvas id="productivityChart" height="140"></canvas>
+            <div class="progress mb-2" role="progressbar" aria-label="Success example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar" style="width: {{ '%d' % context.work_trackers_data_compute.assignments.percentage_work }}%">{{ context.work_trackers_data_compute.assignments.completed_assigned_work }}/{{ context.work_trackers_data_compute.assignments.total_assigned_work }}</div>
+            </div>
+            <small class="text-center mb-3">
+              <span>{{ '%0.1f' % context.work_trackers_data_compute.assignments.percentage_work }}% work completion</span> 
+              ( &nbsp; <span class="text-danger">{{  context.work_trackers_data_compute.assignments.pending_work_days }} Pending work Days</span>&nbsp; 
+              <span class="text-warning">{{ context.work_trackers_data_compute.assignments.backlog_completion_days }} Backlog completion Days</span>&nbsp; 
+              <span class="text-success">{{  context.work_trackers_data_compute.assignments.perfect_work_days }} Perfect Days</span>&nbsp; 
+              &nbsp; )
+              </small>
+            <canvas id="productivityChart"></canvas>
           </div>
 
         </div>
@@ -607,8 +614,7 @@
             <div class="metric-label mb-2">
               <span class="fw-semibold">Work Balance Overview</span>
             </div>
-
-            <canvas id="workRadarChart" height="220"></canvas>
+            <canvas id="workRadarChart"></canvas>
           </div>
 
         </div>
@@ -638,7 +644,7 @@
   </div>
 
 </div>
-{{ context.personal_trackers_data_compute.screen_time.data }}
+
 <!-- charts  -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
@@ -722,7 +728,12 @@
   
   renderScreenTimeSparkLineChart({{ context.personal_trackers_data_compute.screen_time.data }}, 740, 25);
 
+  function renderExerciseDoughnutChart(data, total){
+
+  }
+
   function renderBreakBarChart(data) {
+  data = data.map(d => d[0]);
   const svgGroup = document.getElementById("breakBars");
   svgGroup.innerHTML = "";
 
@@ -759,29 +770,26 @@
   // document.getElementById("breakAvg").innerText = avg.toFixed(0);
 }
 
-renderBreakBarChart([
-  15, 20, 10, 30, 45, 25, 20,
-  15, 10, 40, 35, 20, 25,
-  30, 15, 10, 20, 25,
-  30, 35, 40, 20, 15,
-  10, 30, 45, 20, 25, 30
-]);
+renderBreakBarChart({{ context.work_trackers_data_compute.break_time.data }});
 
 const ctxProd = document.getElementById('productivityChart');
+const rawAssignmentsData = {{ context.work_trackers_data_compute.assignments.data }}
+const assigned_work_data = rawAssignmentsData.map(d => d[0][1]);
+const completed_work_data = rawAssignmentsData.map(d => d[0][0]);
 
 new Chart(ctxProd, {
   type: 'bar',
   data: {
-    labels: ['Mon','Tue','Wed','Thu','Fri','Sat'],
+    labels: {{ context.work_trackers_data_compute.days }},
     datasets: [
       {
         label: 'Assigned',
-        data: [8, 7, 9, 8, 6, 5],
+        data: assigned_work_data,
         backgroundColor: 'rgba(108,117,125,0.4)'
       },
       {
         label: 'Completed',
-        data: [7, 6, 9, 6, 5, 4],
+        data: completed_work_data,
         backgroundColor: 'rgba(25,135,84,0.6)'
       }
     ]
@@ -815,7 +823,11 @@ new Chart(ctxRadar, {
     ],
     datasets: [{
       label: 'This Month',
-      data: [65, 75, 50, 70, 60],
+      data: [{{ context.work_trackers_data_compute.radar_data.consistency_score }},
+      {{ context.work_trackers_data_compute.radar_data.productivity_score }},
+      {{ context.work_trackers_data_compute.radar_data.break_score }},
+      {{ context.work_trackers_data_compute.radar_data.punctuality_score }},
+      {{ context.work_trackers_data_compute.radar_data.workload_score }},],
       fill: true,
       backgroundColor: 'rgba(13,110,253,0.15)',
       borderColor: 'rgba(13,110,253,0.8)',

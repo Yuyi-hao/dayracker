@@ -28,6 +28,25 @@ def get_month_name(month: int) -> list[str] | None:
         return None
     return dct_month[month]
 
+def get_month_days(month: int) -> int | None:
+    dct_month = {
+        1: 31,
+        2: 28,
+        3: 31,
+        4: 30,
+        5: 31,
+        6: 30,
+        7: 31,
+        8: 31,
+        9: 30,
+        10: 31,
+        11: 30,
+        12: 31,
+    }
+    if month not in dct_month:
+        return None
+    return dct_month[month]
+
 def get_month_year(param: str) -> tuple[int, int]:
     month, year = 0, 0
     if param:
@@ -64,3 +83,9 @@ def min_to_time(min: float|int) -> str:
     hour = min//60
     mins = min%60
     return f'{"%02d" % hour}:{"%02d" % mins}'
+
+def min_to_human_time(min: float|int) -> str:
+    min = round(min)
+    hour = min//60
+    mins = min%60
+    return f'{"%02d" % hour}h {"%02d" % mins}m'
