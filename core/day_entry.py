@@ -79,7 +79,7 @@ def user_day_entry():
             given_work = data.get('given-work')
             completed_work = data.get('completed-work')
             workload = data.get('workload')
-            is_off  = data.get('is-off') == "on"
+            is_off  = data.get('off-day') == "on"
 
             for tracker in custom_trackers:
                 field_name = f"custom-tracker-{tracker['name']}-{tracker['tracker_id']}"
