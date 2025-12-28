@@ -416,45 +416,16 @@ def prepare_work_trackers_date(raw_data):
 def get_summary():
     user_id = session['user_id']
     month, year =  get_month_year(request.args.get('date'))
-    month_days = monthrange(year, month)
     db = get_db()
 
     user_journal_days = [day['day'] for day in db.execute("SELECT CAST(strftime('%d', date) AS INTEGER) AS day FROM diary_entry WHERE strftime('%Y-%m', date) = ? AND user_id=?", (f'{year}-{month}', user_id) ).fetchall()]
     diary_entries = db.execute("SELECT * FROM diary_entry WHERE strftime('%Y-%m', date) = ? AND user_id=?", (f'{year}-{month}', user_id)).fetchall()
     personal_trackers_data = db.execute("SELECT CAST(strftime('%d', date) AS INTEGER) AS day_date,* FROM personal_trackers_data WHERE strftime('%Y-%m', date) = ? AND user_id=?", (f'{year}-{month}', user_id)).fetchall()
     personal_trackers_data_compute = prepare_personal_trackers_date(personal_trackers_data)
-    work_trackers_data = db.execute("SELECT date, commute_time, return_time, break_time, given_work, completed_work, is_off FROM work_trackers_data WHERE strftime('%Y-%m', date) = ? AND user_id=?", (f'{year}-{month}', user_id)).fetchall()
+    work_trackers_data = db.execute("SELECT CAST(strftime('%d', date) AS INTEGER) AS day_date,* FROM work_trackers_data WHERE strftime('%Y-%m', date) = ? AND user_id=?", (f'{year}-{month}', user_id)).fetchall()
+    work_trackers_data_compute = prepare_work_trackers_date(work_trackers_data)
     custom_trackers_data = db.execute("SELECT * FROM custom_trackers_data WHERE strftime('%Y-%m', date) = ? AND user_id=?", (f'{year}-{month}', user_id)).fetchall()
-    # personal_trackers_data_compute = defaultdict(list)
-    # for idx, key in enumerate(["date", "wakeup_time", "sleep_time", "screen_time", "water_intake", "exercise", "outgoing", "mood"]):
-    #     for row in personal_trackers_data:
-    #         if key == "date":
-    #             personal_trackers_data_compute[key].append(row[idx].isoformat())
-    #         elif "time" in key:
-    #             personal_trackers_data_compute[key].append(time_to_minutes(row[idx]))
-    #         else:
-    #             personal_trackers_data_compute[key].append(row[idx])
-    
-    work_trackers_data_compute = {}
-    off_days = 0
-    total_days = 0
-    for idx, key in enumerate(["date", "commute_time", "return_time", "break_time", "given_work", "completed_work", "is_off"]):
-        work_trackers_data_compute[key] = []
-        for row in work_trackers_data:
-            if key == "date":
-                work_trackers_data_compute[key].append(row[idx].isoformat())
-            elif "time" in key:
-                work_trackers_data_compute[key].append(time_to_minutes(row[idx]))
-            else:
-                work_trackers_data_compute[key].append(row[idx])
-            if row[-1] == True:
-                off_days += 1
-            total_days += 1
 
-    work_trackers_data_compute['off_days'] = off_days
-    work_trackers_data_compute['total_days'] = total_days
-
-    print(personal_trackers_data_compute)
     context={
         'entries_day': user_journal_days,
         'diary_entries': diary_entries,
@@ -463,31 +434,8 @@ def get_summary():
         'work_trackers_data_compute': work_trackers_data_compute,
         'work_trackers_data': work_trackers_data,
         'custom_trackers_data': custom_trackers_data,
-        'month': {"month_num": month, "month_name": get_month_name(month)},
+        'month': {"month_num": month, "month_name": get_month_name(month), "month_days": get_month_days(month)},
         'year': year
     }
 
     return render_template('summary/summary_diary.html', context=context)
-
-
-# data to be send
-# - total days of month, array of entry days 
-# - no diary data
-# - avg mood rating -> count of No entry, and entry of each type of mood count
-# - avg water rating , how many times water is greater than 2.5 litera set limits 
-# - screen time data with none value tackled, avg time, min time, max time
-# - sleep duration calculated, none value tackeld, average wake up and sleep time, variance of sleep durations 
-# - exercise count of each type of exercise average score and streak of medium to heavy exercise 
-# - outgoing count of each type of outgoing average score and streak of medium to heavy outgoing
-
-# -- work related 
-# = office time same as sleep data
-# - count of off days work total leaves and holidays 
-# - breaks same as sleep data 
-# - work load aevrage and top two type of workload and how much they cover 
-
-# -- data for workload calculation and productivity data 
-
-
-
-# SELECT date, commute_time, return_time, break_time, given_work, completed_work, is_off FROM work_trackers_data WHERE strftime('%Y-%m', date) = ? AND user_id=?
