@@ -31,32 +31,42 @@ class LocalStorage(Storage):
         if os.path.exists(file_identifier):
             os.remove(file_identifier)
 
-from imagekitio import ImageKit, ImageKitError
+
+from imagekitio import ImageKit
+from flask import current_app
+
 class ImageKitStorage(Storage):
-    def __init__(self, IMAGEKIT_PRIVATE_KEY, IMAGEKIT_PUBLIC_KEY, IMAGEKIT_URL_ENDPOINT):
-        self.imageKit = ImageKit(
-            private_key=IMAGEKIT_PRIVATE_KEY,
-            public_key=IMAGEKIT_PUBLIC_KEY,
-            url_endpoint=IMAGEKIT_URL_ENDPOINT
+    def __init__(self, private_key, public_key, url_endpoint):
+        self.imagekit = ImageKit(
+            private_key=private_key,
+            # public_key=public_key,
+            # url_endpoint=url_endpoint
         )
-    
-    def save(self, file_stream, filename, url=""):
-        public_url = ""
-        if url:
-            try:
-                upload = self.imageKit.upload_file(
-                    file=url,
-                    file_name="test-url.jpg",
-                    options=UploadFileRequestOptions(
-                        response_fields=["is_private_file", "tags"],
-                        tags=["tag1", "tag2"]
-                    )
-                )
-                if upload:
-                    public_url = upload["url"]
-            except ImageKitError as error:
-                print(f"ERROR: Error uploading image on imagekit: {error}")
-        return public_url
-    
+
+    def save(self, file_stream, filename):
+        try:
+            upload = self.imagekit.files.upload(
+                file=file_stream.read(),   # bytes
+                file_name=filename,
+                use_unique_file_name=True,
+                folder="/profile_pictures"
+            )
+
+            # upload is a dict-like object
+            return upload.url
+
+        except Exception as e:
+            current_app.logger.error(f"ImageKit upload failed: {e}")
+            return None
+
     def delete(self, file_identifier):
-        return super().delete(file_identifier)
+        """
+        file_identifier = ImageKit fileId (NOT URL)
+        """
+        return True
+        try:
+            self.imagekit.delete_file(file_identifier)
+            return True
+        except Exception as e:
+            current_app.logger.error(f"ImageKit delete failed: {e}")
+            return False

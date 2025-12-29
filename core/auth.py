@@ -145,6 +145,8 @@ def upload_profile_picture():
         response = {"image_url": None, "success": False, "status_code":400, "message": "File is not an image"}
         return jsonify(response)
     image_url = current_app.storage.save(file, f"{user_id}-profile-pic.{file.content_type.split('/')[-1]}")
+    if not image_url:
+        response = {"image_url": None, "success": False, "status_code": 500}
     response = {"image_url": image_url, "success": True, "status_code":204}
     return jsonify(response)
 

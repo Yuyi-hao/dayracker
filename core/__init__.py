@@ -29,8 +29,8 @@ def create_app(test_config=None):
     if ENVIRONMENT=="local":
         app.storage = LocalStorage()
     elif ENVIRONMENT=='prod':
-        IMAGEKIT_PRIVATE_KEY=os.getenv('IMAGEKIT_PUBLIC')
-        IMAGEKIT_PUBLIC_KEY=os.getenv('IMAGEKIT_PRIVATE')
+        IMAGEKIT_PRIVATE_KEY=os.getenv('IMAGEKIT_PRIVATE')
+        IMAGEKIT_PUBLIC_KEY=os.getenv('IMAGEKIT_PUBLIC')
         IMAGEKIT_URL_ENDPOINT=os.getenv('IMAGEKIT_URL')
         app.storage = ImageKitStorage(IMAGEKIT_PRIVATE_KEY, IMAGEKIT_PUBLIC_KEY ,IMAGEKIT_URL_ENDPOINT)
 
