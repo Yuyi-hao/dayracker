@@ -1,12 +1,14 @@
 # DayRacker
 
 Dayracker is a flask based web app which made to track your day and give functionality to even create your own tracker.
+#### Video Demo:  
+- https://youtu.be/UqW1yUiJS7s?si=YhCzWP80FNrtxO0L 
 
-- Video Demo: https://youtu.be/UqW1yUiJS7s?si=YhCzWP80FNrtxO0L
-- Project Live Link: https://charliekirk.pythonanywhere.com
-
-### Description
+#### Description:
 DayTracker is a web application designed to help users track their daily activities, sleep schedule, and personal reflections in a simple and organized way. The main goal of this project is to provide a minimal and distraction-free tool for daily tracking and monthly self-review.
+
+#### Project Live Link:
+- https://charliekirk.pythonanywhere.com
 
 ### Features
 - Create daily activity entries
